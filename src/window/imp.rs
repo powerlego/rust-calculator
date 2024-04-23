@@ -1,10 +1,10 @@
+use adw::prelude::*;
 use adw::subclass::prelude::*;
-use adw::{prelude::*};
 use glib::subclass::InitializingObject;
 use gtk::{glib, Button, CompositeTemplate};
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource="com/nc/calculator/window.ui")]
+#[template(resource = "com/nc/calculator/window.ui")]
 pub struct Window {
     #[template_child]
     pub button: TemplateChild<Button>,

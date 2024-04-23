@@ -1,7 +1,8 @@
+mod window;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
-
+use window::Window;
 const APP_ID: &str = "com.nc.Calculator";
 
 fn main() -> glib::ExitCode{

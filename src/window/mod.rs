@@ -1,13 +1,11 @@
 mod imp;
 
-use adw::prelude::*;
-use adw::subclass::prelude::*;
+// use adw::prelude::*;
+// use adw::subclass::prelude::*;
+use glib::Object;
+use gtk::{gio, glib};
 
-use gtk::{
-    gio, glib
-};
-
-use crate::APP_ID;
+// use crate::APP_ID;
 
 glib::wrapper! {
     pub struct Window(ObjectSubclass<imp::Window>)
