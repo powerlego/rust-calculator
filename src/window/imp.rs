@@ -1,13 +1,11 @@
-use adw::prelude::*;
+// use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::{glib, Button, CompositeTemplate};
+use gtk::{glib, CompositeTemplate};
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/nc/calculator/window.ui")]
 pub struct Window {
-    #[template_child]
-    pub button: TemplateChild<Button>,
 }
 
 #[glib::object_subclass]
@@ -33,10 +31,10 @@ impl ObjectImpl for Window {
         self.parent_constructed();
 
         // Connect to "clicked" signal of `button`
-        self.button.connect_clicked(move |button| {
-            // Set the label to "Hello World!" after the button has been clicked on
-            button.set_label("Hello World!");
-        });
+        // self.button.connect_clicked(move |button| {
+        //     // Set the label to "Hello World!" after the button has been clicked on
+        //     button.set_label("Hello World!");
+        // });
     }
 }
 
