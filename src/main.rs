@@ -1,4 +1,5 @@
 mod window;
+mod skeleton;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
