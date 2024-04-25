@@ -14,3 +14,9 @@ impl Skeleton {
         Object::builder().build()
     }
 }
+
+impl Default for Skeleton {
+    fn default() -> Self {
+        Self::new()
+    }
+}
