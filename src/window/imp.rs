@@ -1,11 +1,16 @@
-// use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::{glib, CompositeTemplate};
+use gtk::{gio,glib::{self, types::StaticTypeExt}, CompositeTemplate, ListBox};
+use std::cell::RefCell;
+
+use crate::skeleton::Skeleton;
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/nc/calculator/window.ui")]
 pub struct Window {
+    #[template_child]
+    pub mem_hist_list: TemplateChild<ListBox>,
+    pub mem_hist: RefCell<Option<gio::ListStore>>,
 }
 
 #[glib::object_subclass]
@@ -16,6 +21,8 @@ impl ObjectSubclass for Window {
     type ParentType = adw::ApplicationWindow;
 
     fn class_init(klass: &mut Self::Class) {
+        Skeleton::ensure_type();
+
         klass.bind_template();
     }
 
@@ -30,11 +37,10 @@ impl ObjectImpl for Window {
         // Call "constructed" on parent
         self.parent_constructed();
 
-        // Connect to "clicked" signal of `button`
-        // self.button.connect_clicked(move |button| {
-        //     // Set the label to "Hello World!" after the button has been clicked on
-        //     button.set_label("Hello World!");
-        // });
+        let obj = self.obj();
+        obj.setup_mem_hist();
+        obj.create_rows();
+        
     }
 }
 

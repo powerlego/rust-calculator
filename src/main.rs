@@ -1,4 +1,6 @@
 mod window;
+mod skeleton;
+mod integer_object;
 use gtk::prelude::*;
 use gtk::{gio, glib};
 
