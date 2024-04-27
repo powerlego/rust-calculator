@@ -3,5 +3,6 @@
     <gresource prefix="/com/nc/calculator">
         <file compressed="true" preprocess="xml-stripblanks">window.ui</file>
         <file compressed="true" preprocess="xml-stripblanks">skeleton.ui</file>
+        <file compressed="true">style.css</file>
     </gresource>
 </gresources>

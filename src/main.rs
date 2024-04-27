@@ -1,20 +1,36 @@
-mod window;
-mod skeleton;
 mod integer_object;
+mod skeleton;
+mod window;
 use gtk::prelude::*;
-use gtk::{gio, glib};
+use gtk::{gdk, gio, glib, CssProvider};
 
+use gdk::Display;
 use window::Window;
 const APP_ID: &str = "com.nc.Calculator";
 
-fn main() -> glib::ExitCode{
-    gio::resources_register_include!("resource.gresource").expect("Failed to include our compiled resources");
+fn main() -> glib::ExitCode {
+    gio::resources_register_include!("resource.gresource")
+        .expect("Failed to include our compiled resources");
 
     let app = adw::Application::builder().application_id(APP_ID).build();
+
+    app.connect_startup(|_|{
+        load_css();
+    });
 
     app.connect_activate(build_ui);
 
     app.run()
+}
+
+fn load_css() {
+    let provider = CssProvider::new();
+    provider.load_from_resource("/com/nc/calculator/style.css");
+    gtk::style_context_add_provider_for_display(
+        &Display::default().expect("Error initializing gtk css provider."),
+        &provider,
+        gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+    );
 }
 
 fn build_ui(app: &adw::Application) {
