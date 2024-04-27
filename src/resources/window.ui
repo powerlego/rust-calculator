@@ -5,13 +5,26 @@
         <property name="width-request">360</property>
         <property name="height-request">200</property>
         <child>
-            <object class="AdwBreakpoint">
+            <object class="AdwToolbarView">
+                <child type="top">
+                    <object class="AdwHeaderBar">
+                    </object>
+                </child>
+                <property name="content">
+                    <object class="GtkScrolledWindow">
+                        <property name="child">
+                            <object class="GtkListBox" id="mem_hist_list" />
+                        </property>
+                    </object>
+                </property>
+            </object>
+            <!-- <object class="AdwBreakpoint">
                 <condition>max-width: 500sp</condition>
                 <setter object="split_view" property="collapsed">True</setter>
-            </object>
+            </object> -->
         </child>
 
-        <property name="content">
+        <!-- <property name="content">
             <object class="AdwNavigationSplitView" id="split_view">
                 <property name="min-sidebar-width">200</property>
                 <property name="max-sidebar-width">350</property>
@@ -54,6 +67,6 @@
                     </object>
                 </property>
             </object>
-        </property>
+        </property> -->
     </template>
 </interface>
