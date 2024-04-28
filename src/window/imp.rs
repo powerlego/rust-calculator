@@ -43,6 +43,18 @@ impl ObjectSubclass for Window {
 #[gtk::template_callbacks]
 impl Window{
     #[template_callback]
+    fn on_expander_keypad_expanded(&self, _p: glib::ParamSpec){
+        if self.expander_keypad.is_expanded(){
+            if self.expander_history.is_expanded(){
+                self.expander_history.set_expanded(false);
+            }
+            if self.expander_convert.is_expanded(){
+                self.expander_convert.set_expanded(false);
+            }
+        }
+    }
+
+    #[template_callback]
     fn on_expander_history_expanded(&self, _p: glib::ParamSpec){
         if self.expander_history.is_expanded(){
             self.tabs.set_current_page(Some(0));
@@ -51,6 +63,19 @@ impl Window{
             }
             if self.expander_convert.is_expanded() {
                 self.expander_convert.set_expanded(false);
+            }
+        }
+    }
+
+    #[template_callback]
+    fn on_expander_convert_expanded(&self, _p: glib::ParamSpec){
+        if self.expander_convert.is_expanded(){
+            self.tabs.set_current_page(Some(1));
+            if self.expander_keypad.is_expanded(){
+                self.expander_keypad.set_expanded(false);
+            }
+            if self.expander_history.is_expanded(){
+                self.expander_history.set_expanded(false);
             }
         }
     }

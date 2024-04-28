@@ -12,18 +12,23 @@
                 </child>
                 <property name="content">
                     <object class="GtkBox" id="boxes">
+                        <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
                         <child>
                             <object class="GtkBox" id="expanders">
-                                <property name="orientation">horizontal</property>
                                 <property name="halign">start</property>
                                 <property name="valign">center</property>
                                 <property name="spacing">12</property>
                                 <child>
                                     <object class="GtkExpander" id="expander_keypad">
+                                        <property name="can-focus">True</property>
+                                        <signal name="notify::expanded" handler="on_expander_keypad_expanded" swapped="true" />
                                         <child type="label">
                                             <object class="GtkLabel">
-                                                <property name="label" translatable="yes">Keypad</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">_Keypad</property>
+                                                <property name="use-underline">True</property>
                                                 <style>
                                                     <class name="expand-label" />
                                                 </style>
@@ -37,12 +42,10 @@
                                 <child>
                                     <object class="GtkExpander" id="expander_history">
                                         <property name="can-focus">True</property>
-                                        <signal name="notify::expanded"
-                                            handler="on_expander_history_expanded" swapped="true" />
+                                        <signal name="notify::expanded" handler="on_expander_history_expanded" swapped="true" />
                                         <child type="label">
                                             <object class="GtkLabel">
                                                 <property name="label" translatable="yes">_History</property>
-                                                <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="use-underline">True</property>
                                                 <style>
@@ -59,10 +62,10 @@
                                     <object class="GtkExpander" id="expander_convert">
                                         <property name="can-focus">True</property>
                                         <property name="hexpand">True</property>
+                                        <signal name="notify::expanded" handler="on_expander_convert_expanded" swapped="true" />
                                         <child type="label">
                                             <object class="GtkLabel">
-                                                <property name="label" translatable="yes">_Convert</property>
-                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">_Conversion</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="use-underline">True</property>
                                                 <style>
@@ -107,13 +110,18 @@
                                     </object>
                                 </child>
                                 <child>
-                                    <object class="Skeleton" id="conversion_window" />
-                                </child>
-                                <child type="tab">
-                                    <object class="GtkLabel" id="label_conversion">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="label" translatable="yes">Convert</property>
+                                    <object class="GtkNotebookPage">
+                                        <property name="tab-fill">False</property>
+                                        <property name="child">
+                                            <object class="Skeleton" id="conversion_window" />
+                                        </property>
+                                        <property name="tab">
+                                            <object class="GtkLabel" id="conversion_label">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="label" translatable="yes">Convert</property>
+                                            </object>
+                                        </property>
                                     </object>
                                 </child>
                             </object>
@@ -124,55 +132,6 @@
                     </object>
                 </property>
             </object>
-            <!-- <object class="AdwBreakpoint">
-                <condition>max-width: 500sp</condition>
-                <setter object="split_view" property="collapsed">True</setter>
-            </object> -->
         </child>
-
-        <!-- <property name="content">
-            <object class="AdwNavigationSplitView" id="split_view">
-                <property name="min-sidebar-width">200</property>
-                <property name="max-sidebar-width">350</property>
-                <property name="show-content">True</property>
-                <property name="sidebar">
-                    <object class="AdwNavigationPage">
-                        <property name="title" translatable="yes">History</property>
-                        <property name="child">
-                            <object class="AdwToolbarView">
-                                <child type="top">
-                                    <object class="AdwHeaderBar">
-                                    </object>
-                                </child>
-                                <property name="content">
-                                    <object class="GtkScrolledWindow">
-                                        <property name="child">
-                                            <object class="GtkListBox" id="mem_hist_list" />
-                                        </property>
-                                    </object>
-                                </property>
-                            </object>
-                        </property>
-                    </object>
-                </property>
-                <property name="content">
-                    <object class="AdwNavigationPage">
-                        <property name="title" translatable="yes">Calculator</property>
-                        <property name="child">
-                            <object class="AdwToolbarView">
-                                <child type="top">
-                                    <object class="AdwHeaderBar">
-                                        <property name="show-title">False</property>
-                                    </object>
-                                </child>
-                                <property name="content">
-                                    <object class="Skeleton" />
-                                </property>
-                            </object>
-                        </property>
-                    </object>
-                </property>
-            </object>
-        </property> -->
     </template>
 </interface>
