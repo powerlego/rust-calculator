@@ -1,6 +1,6 @@
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::{gio,glib::{self, types::StaticTypeExt}, CompositeTemplate, ListBox};
+use gtk::{gio,glib::{self, types::StaticTypeExt}, CompositeTemplate, ListBox, Notebook, Expander};
 use std::cell::RefCell;
 
 use crate::skeleton::Skeleton;
@@ -10,6 +10,14 @@ use crate::skeleton::Skeleton;
 pub struct Window {
     #[template_child]
     pub mem_hist_list: TemplateChild<ListBox>,
+    #[template_child]
+    pub tabs: TemplateChild<Notebook>,
+    #[template_child]
+    pub expander_keypad: TemplateChild<Expander>,
+    #[template_child]
+    pub expander_history: TemplateChild<Expander>,
+    #[template_child]
+    pub expander_convert: TemplateChild<Expander>,
     pub mem_hist: RefCell<Option<gio::ListStore>>,
 }
 
@@ -24,10 +32,27 @@ impl ObjectSubclass for Window {
         Skeleton::ensure_type();
 
         klass.bind_template();
+        klass.bind_template_callbacks();
     }
 
     fn instance_init(obj: &InitializingObject<Self>) {
         obj.init_template();
+    }
+}
+
+#[gtk::template_callbacks]
+impl Window{
+    #[template_callback]
+    fn on_expander_history_expanded(&self, _p: glib::ParamSpec){
+        if self.expander_history.is_expanded(){
+            self.tabs.set_current_page(Some(0));
+            if self.expander_keypad.is_bound(){
+                self.expander_keypad.set_expanded(false);
+            }
+            if self.expander_convert.is_expanded() {
+                self.expander_convert.set_expanded(false);
+            }
+        }
     }
 }
 
