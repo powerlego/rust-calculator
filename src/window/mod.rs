@@ -2,14 +2,17 @@ mod imp;
 
 // use adw::prelude::*;
 use adw::subclass::prelude::*;
-use glib::{clone,Object};
+use glib::{clone, Object};
 use gtk::glib::object::Cast;
-use gtk::{gio, glib, NoSelection};
+use gtk::{
+    gio::{self, Settings},
+    glib, NoSelection,
+};
 
 use crate::integer_object::IntegerObject;
 use crate::skeleton::Skeleton;
 
-// use crate::APP_ID;
+use crate::APP_ID;
 
 glib::wrapper! {
     pub struct Window(ObjectSubclass<imp::Window>)
@@ -23,6 +26,20 @@ impl Window {
         // Create new window
         Object::builder().property("application", app).build()
     }
+
+    fn setup_settings(&self) {
+        let settings = Settings::new(APP_ID);
+        self.imp()
+            .settings
+            .set(settings)
+            .expect("`settings` should not be set before calling `setup_settings`.");
+    }
+
+    fn settings(&self) -> &Settings {
+        self.imp().settings.get().expect("`settings` should be set in `setup_settings`.")
+    }
+
+    fn setup_actions(&self) {}
 
     fn mem_hist(&self) -> gio::ListStore {
         self.imp()
@@ -51,7 +68,7 @@ impl Window {
         row
     }
 
-    fn create_rows(&self){
+    fn create_rows(&self) {
         let vector: Vec<IntegerObject> = (0..=10).map(IntegerObject::new).collect();
         self.mem_hist().extend_from_slice(&vector);
     }
