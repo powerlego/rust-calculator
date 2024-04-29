@@ -3,11 +3,11 @@ use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::prelude::*;
 use gtk::{
-    gio,
+    gio::{self, Settings},
     glib::{self, types::StaticTypeExt},
     CompositeTemplate, Expander, ListBox, Notebook,
 };
-use std::cell::{Cell, RefCell};
+use std::cell::{Cell, OnceCell, RefCell};
 
 use crate::skeleton::Skeleton;
 
@@ -28,6 +28,7 @@ pub struct Window {
     pub keypad_buttons: TemplateChild<Skeleton>,
     pub persistent_keypad: Cell<bool>,
     pub mem_hist: RefCell<Option<gio::ListStore>>,
+    pub settings: OnceCell<Settings>,
 }
 
 #[glib::object_subclass]
@@ -79,8 +80,7 @@ impl Window {
             if self.expander_convert.is_expanded() {
                 self.expander_convert.set_expanded(false);
             }
-        }
-        else if !self.expander_convert.is_expanded() {
+        } else if !self.expander_convert.is_expanded() {
             self.show_tabs(false);
         }
     }
@@ -96,8 +96,7 @@ impl Window {
             if self.expander_history.is_expanded() {
                 self.expander_history.set_expanded(false);
             }
-        }
-        else if !self.expander_history.is_expanded() {
+        } else if !self.expander_history.is_expanded() {
             self.show_tabs(false);
         }
     }
@@ -108,11 +107,12 @@ impl Window {
         }
         let w: i32 = self.obj().width();
         let mut h: i32 = self.obj().height();
+        let persistent_keypad = self.persistent_keypad.get();
 
-        if !self.persistent_keypad.get() && self.tabs.is_visible() {
+        if !persistent_keypad && self.tabs.is_visible() {
             h -= self.tabs.height();
         }
-        if self.persistent_keypad.get() && self.expander_convert.is_expanded() {
+        if persistent_keypad && self.expander_convert.is_expanded() {
             if do_show {
                 h += 6;
             } else {
@@ -127,7 +127,7 @@ impl Window {
             } else {
                 h += 9;
             }
-            if !self.persistent_keypad.get() {
+            if !persistent_keypad {
                 self.tabs.set_visible(false);
             }
             self.obj().set_default_size(w, h);
@@ -137,7 +137,7 @@ impl Window {
             self.obj().set_default_size(w, h);
         }
         self.keypad_buttons
-            .set_vexpand(!self.persistent_keypad.get() || !self.tabs.is_visible());
+            .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
     }
 
     fn show_tabs(&self, do_show: bool) {
@@ -146,8 +146,9 @@ impl Window {
         }
         let w: i32 = self.obj().width();
         let mut h: i32 = self.obj().height();
+        let persistent_keypad = self.persistent_keypad.get();
 
-        if !self.persistent_keypad.get() && self.keypad_buttons.is_visible() {
+        if !persistent_keypad && self.keypad_buttons.is_visible() {
             h -= self.keypad_buttons.height();
         }
         if do_show {
@@ -158,17 +159,17 @@ impl Window {
             } else {
                 h += 9;
             }
-            if !self.persistent_keypad.get() {
+            if !persistent_keypad {
                 self.keypad_buttons.set_visible(false);
             }
             self.obj().set_default_size(w, h);
-        }
-        else {
+        } else {
             h -= self.tabs.height();
             self.tabs.set_visible(false);
             self.obj().set_default_size(w, h);
         }
-        self.keypad_buttons.set_vexpand(!self.persistent_keypad.get() || !self.tabs.is_visible());
+        self.keypad_buttons
+            .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
     }
 }
 
@@ -182,6 +183,7 @@ impl ObjectImpl for Window {
         self.tabs.set_visible(false);
 
         let obj = self.obj();
+        obj.setup_settings();
         obj.setup_mem_hist();
         obj.create_rows();
     }
