@@ -3,6 +3,7 @@
     <template class="MainWindow" parent="AdwApplicationWindow">
         <property name="title" translatable="yes">Calculator</property>
         <property name="width-request">360</property>
+        <property name="height-request">72</property>
         <child>
             <object class="AdwToolbarView">
                 <child type="top">
@@ -19,6 +20,7 @@
                                 <property name="halign">start</property>
                                 <property name="valign">center</property>
                                 <property name="spacing">12</property>
+                                <property name="margin-start">6</property>
                                 <child>
                                     <object class="GtkExpander" id="expander_keypad">
                                         <property name="can-focus">True</property>
