@@ -140,6 +140,9 @@ impl ObjectImpl for Window {
         // Call "constructed" on parent
         self.parent_constructed();
 
+        self.keypad_buttons.set_visible(false);
+        self.tabs.set_visible(false);
+
         let obj = self.obj();
         obj.setup_mem_hist();
         obj.create_rows();
