@@ -1,7 +1,13 @@
+// Module: window
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::{gio,glib::{self, types::StaticTypeExt}, CompositeTemplate, ListBox, Notebook, Expander};
-use std::cell::RefCell;
+use gtk::prelude::*;
+use gtk::{
+    gio,
+    glib::{self, types::StaticTypeExt},
+    CompositeTemplate, Expander, ListBox, Notebook,
+};
+use std::cell::{Cell, RefCell};
 
 use crate::skeleton::Skeleton;
 
@@ -18,6 +24,9 @@ pub struct Window {
     pub expander_history: TemplateChild<Expander>,
     #[template_child]
     pub expander_convert: TemplateChild<Expander>,
+    #[template_child]
+    pub keypad_buttons: TemplateChild<Skeleton>,
+    pub persistent_keypad: Cell<bool>,
     pub mem_hist: RefCell<Option<gio::ListStore>>,
 }
 
@@ -41,24 +50,30 @@ impl ObjectSubclass for Window {
 }
 
 #[gtk::template_callbacks]
-impl Window{
+impl Window {
     #[template_callback]
-    fn on_expander_keypad_expanded(&self, _p: glib::ParamSpec){
-        if self.expander_keypad.is_expanded(){
-            if self.expander_history.is_expanded(){
-                self.expander_history.set_expanded(false);
+    fn on_expander_keypad_expanded(&self, _p: glib::ParamSpec) {
+        if self.expander_keypad.is_expanded() {
+            self.show_keypad_widget(true);
+            if !self.persistent_keypad.get() {
+                if self.expander_history.is_expanded() {
+                    self.expander_history.set_expanded(false);
+                }
+                if self.expander_convert.is_expanded() {
+                    self.expander_convert.set_expanded(false);
+                }
             }
-            if self.expander_convert.is_expanded(){
-                self.expander_convert.set_expanded(false);
-            }
+        }
+        else {
+            self.show_keypad_widget(false);
         }
     }
 
     #[template_callback]
-    fn on_expander_history_expanded(&self, _p: glib::ParamSpec){
-        if self.expander_history.is_expanded(){
+    fn on_expander_history_expanded(&self, _p: glib::ParamSpec) {
+        if self.expander_history.is_expanded() {
             self.tabs.set_current_page(Some(0));
-            if self.expander_keypad.is_bound(){
+            if !self.persistent_keypad.get() && self.expander_keypad.is_expanded() {
                 self.expander_keypad.set_expanded(false);
             }
             if self.expander_convert.is_expanded() {
@@ -68,16 +83,54 @@ impl Window{
     }
 
     #[template_callback]
-    fn on_expander_convert_expanded(&self, _p: glib::ParamSpec){
-        if self.expander_convert.is_expanded(){
+    fn on_expander_convert_expanded(&self, _p: glib::ParamSpec) {
+        if self.expander_convert.is_expanded() {
             self.tabs.set_current_page(Some(1));
-            if self.expander_keypad.is_expanded(){
+            if !self.persistent_keypad.get() && self.expander_keypad.is_expanded() {
                 self.expander_keypad.set_expanded(false);
             }
-            if self.expander_history.is_expanded(){
+            if self.expander_history.is_expanded() {
                 self.expander_history.set_expanded(false);
             }
         }
+    }
+
+    fn show_keypad_widget(&self, do_show: bool) {
+        if do_show == self.keypad_buttons.is_visible() {
+            return;
+        }
+        let w: i32 = self.obj().width();
+        let mut h: i32 = self.obj().height();
+
+        if !self.persistent_keypad.get() && self.tabs.is_visible() {
+            h -= self.tabs.height() + 9;
+        }
+        if self.persistent_keypad.get() && self.expander_convert.is_expanded() {
+            if do_show {
+                h += 6;
+            } else {
+                h -= 6;
+            }
+        }
+        if do_show {
+            self.keypad_buttons.set_visible(true);
+            let kb_h = self.keypad_buttons.height();
+            if kb_h > 10 {
+                h += kb_h + 9;
+            } else {
+                h += 9;
+            }
+            if !self.persistent_keypad.get() {
+                self.tabs.set_visible(false);
+            }
+            self.obj().set_default_size(w, h);
+        } else {
+            h -= self.keypad_buttons.height() + 9;
+            self.keypad_buttons.set_visible(false);
+            self.obj().set_default_size(w, h);
+        }
+        self.keypad_buttons
+            .set_vexpand(!self.persistent_keypad.get() || !self.tabs.is_visible());
     }
 }
 
@@ -90,7 +143,6 @@ impl ObjectImpl for Window {
         let obj = self.obj();
         obj.setup_mem_hist();
         obj.create_rows();
-        
     }
 }
 
