@@ -63,8 +63,7 @@ impl Window {
                     self.expander_convert.set_expanded(false);
                 }
             }
-        }
-        else {
+        } else {
             self.show_keypad_widget(false);
         }
     }
@@ -73,6 +72,7 @@ impl Window {
     fn on_expander_history_expanded(&self, _p: glib::ParamSpec) {
         if self.expander_history.is_expanded() {
             self.tabs.set_current_page(Some(0));
+            self.show_tabs(true);
             if !self.persistent_keypad.get() && self.expander_keypad.is_expanded() {
                 self.expander_keypad.set_expanded(false);
             }
@@ -80,18 +80,25 @@ impl Window {
                 self.expander_convert.set_expanded(false);
             }
         }
+        else if !self.expander_convert.is_expanded() {
+            self.show_tabs(false);
+        }
     }
 
     #[template_callback]
     fn on_expander_convert_expanded(&self, _p: glib::ParamSpec) {
         if self.expander_convert.is_expanded() {
             self.tabs.set_current_page(Some(1));
+            self.show_tabs(true);
             if !self.persistent_keypad.get() && self.expander_keypad.is_expanded() {
                 self.expander_keypad.set_expanded(false);
             }
             if self.expander_history.is_expanded() {
                 self.expander_history.set_expanded(false);
             }
+        }
+        else if !self.expander_history.is_expanded() {
+            self.show_tabs(false);
         }
     }
 
@@ -103,7 +110,7 @@ impl Window {
         let mut h: i32 = self.obj().height();
 
         if !self.persistent_keypad.get() && self.tabs.is_visible() {
-            h -= self.tabs.height() + 9;
+            h -= self.tabs.height();
         }
         if self.persistent_keypad.get() && self.expander_convert.is_expanded() {
             if do_show {
@@ -125,12 +132,43 @@ impl Window {
             }
             self.obj().set_default_size(w, h);
         } else {
-            h -= self.keypad_buttons.height() + 9;
+            h -= self.keypad_buttons.height();
             self.keypad_buttons.set_visible(false);
             self.obj().set_default_size(w, h);
         }
         self.keypad_buttons
             .set_vexpand(!self.persistent_keypad.get() || !self.tabs.is_visible());
+    }
+
+    fn show_tabs(&self, do_show: bool) {
+        if do_show == self.tabs.is_visible() {
+            return;
+        }
+        let w: i32 = self.obj().width();
+        let mut h: i32 = self.obj().height();
+
+        if !self.persistent_keypad.get() && self.keypad_buttons.is_visible() {
+            h -= self.keypad_buttons.height();
+        }
+        if do_show {
+            self.tabs.set_visible(true);
+            let t_h = self.tabs.height();
+            if t_h > 10 {
+                h += t_h + 9;
+            } else {
+                h += 9;
+            }
+            if !self.persistent_keypad.get() {
+                self.keypad_buttons.set_visible(false);
+            }
+            self.obj().set_default_size(w, h);
+        }
+        else {
+            h -= self.tabs.height();
+            self.tabs.set_visible(false);
+            self.obj().set_default_size(w, h);
+        }
+        self.keypad_buttons.set_vexpand(!self.persistent_keypad.get() || !self.tabs.is_visible());
     }
 }
 
