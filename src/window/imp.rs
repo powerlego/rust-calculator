@@ -110,7 +110,7 @@ impl Window {
         let mut h: i32 = self.obj().height();
 
         if !self.persistent_keypad.get() && self.tabs.is_visible() {
-            h -= self.tabs.height() + 9;
+            h -= self.tabs.height();
         }
         if self.persistent_keypad.get() && self.expander_convert.is_expanded() {
             if do_show {
@@ -132,7 +132,7 @@ impl Window {
             }
             self.obj().set_default_size(w, h);
         } else {
-            h -= self.keypad_buttons.height() + 9;
+            h -= self.keypad_buttons.height();
             self.keypad_buttons.set_visible(false);
             self.obj().set_default_size(w, h);
         }
@@ -148,7 +148,7 @@ impl Window {
         let mut h: i32 = self.obj().height();
 
         if !self.persistent_keypad.get() && self.keypad_buttons.is_visible() {
-            h -= self.keypad_buttons.height() + 9;
+            h -= self.keypad_buttons.height();
         }
         if do_show {
             self.tabs.set_visible(true);
@@ -164,7 +164,7 @@ impl Window {
             self.obj().set_default_size(w, h);
         }
         else {
-            h -= self.tabs.height() + 9;
+            h -= self.tabs.height();
             self.tabs.set_visible(false);
             self.obj().set_default_size(w, h);
         }
