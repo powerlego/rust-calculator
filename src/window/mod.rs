@@ -99,6 +99,15 @@ impl Window {
         row
     }
 
+    fn setup_callbacks(&self) {
+        self.imp()
+            .keypad_lock
+            .connect_clicked(clone!(@weak self as window => move |_|{
+                window.imp().persistent_keypad.set(!window.imp().persistent_keypad.get());
+                window.imp().update_persistent_keypad(false);
+            }));
+    }
+
     fn create_rows(&self) {
         let vector: Vec<IntegerObject> = (0..=10).map(IntegerObject::new).collect();
         self.mem_hist().extend_from_slice(&vector);
