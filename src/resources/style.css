@@ -1,7 +1,11 @@
 headerbar .title {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .expand-label {
- font-size:13px;
+  font-size: 13px;
+}
+
+.keypad-lock {
+  padding: 0;
 }

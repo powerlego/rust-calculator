@@ -16,8 +16,9 @@ pub struct IntegerObject {
 // The central trait for subclassing a GObject
 #[glib::object_subclass]
 impl ObjectSubclass for IntegerObject {
-    const NAME: &'static str = "MyGtkAppIntegerObject";
     type Type = super::IntegerObject;
+
+    const NAME: &'static str = "MyGtkAppIntegerObject";
 }
 
 // Trait shared by all GObjects

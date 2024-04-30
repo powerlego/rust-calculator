@@ -22,21 +22,38 @@
                                 <property name="spacing">12</property>
                                 <property name="margin-start">6</property>
                                 <child>
-                                    <object class="GtkExpander" id="expander_keypad">
-                                        <property name="can-focus">True</property>
-                                        <signal name="notify::expanded" handler="on_expander_keypad_expanded" swapped="true" />
-                                        <child type="label">
-                                            <object class="GtkLabel">
-                                                <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">_Keypad</property>
-                                                <property name="use-underline">True</property>
-                                                <style>
-                                                    <class name="expand-label" />
-                                                </style>
+                                    <object class="GtkBox" id="box_keypadexpander">
+                                        <property name="can-focus">False</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                            <object class="GtkExpander" id="expander_keypad">
+                                                <property name="can-focus">True</property>
+                                                <signal name="notify::expanded" handler="on_expander_keypad_expanded" swapped="true" />
+                                                <child type="label">
+                                                    <object class="GtkLabel">
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">_Keypad</property>
+                                                        <property name="use-underline">True</property>
+                                                        <style>
+                                                            <class name="expand-label" />
+                                                        </style>
+                                                    </object>
+                                                </child>
+                                                <child>
+                                                    <placeholder />
+                                                </child>
                                             </object>
                                         </child>
                                         <child>
-                                            <placeholder />
+                                            <object class="GtkButton" id="keypad_lock">
+                                                <property name="can-focus">False</property>
+                                                <property name="icon-name">changes-allow-symbolic</property>
+                                                <property name="has-frame">False</property>
+                                                <property name="tooltip-text" translatable="yes">Toggles persistent keypad (makes it possible to show keypad and history simultaneously)</property>
+                                                <style>
+                                                    <class name="keypad-lock" />
+                                                </style>
+                                            </object>
                                         </child>
                                     </object>
                                 </child>
