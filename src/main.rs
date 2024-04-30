@@ -1,20 +1,19 @@
 mod integer_object;
 mod skeleton;
+mod utils;
 mod window;
+use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
-
-use gdk::Display;
 use window::Window;
 const APP_ID: &str = "com.nc.Calculator";
 
 fn main() -> glib::ExitCode {
-    gio::resources_register_include!("resource.gresource")
-        .expect("Failed to include our compiled resources");
+    gio::resources_register_include!("resource.gresource").expect("Failed to include our compiled resources");
 
     let app = adw::Application::builder().application_id(APP_ID).build();
 
-    app.connect_startup(|_|{
+    app.connect_startup(|_| {
         load_css();
     });
 
