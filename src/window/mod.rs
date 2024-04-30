@@ -65,6 +65,14 @@ impl Window {
                 .as_bool()
                 .expect("Failed to get maximized as bool");
             self.imp().persistent_keypad.set(persistent_keypad);
+            self.imp().keypad_lock.set_icon_name(
+                if persistent_keypad {
+                    "changes-prevent-symbolic"
+                }
+                else {
+                    "changes-allow-symbolic"
+                },
+            );
             self.set_default_size(window_width, window_height);
             if is_maximized {
                 self.maximize();
