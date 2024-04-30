@@ -1,13 +1,17 @@
 mod imp;
 
-// use adw::prelude::*;
+use std::fs::read_to_string;
+
 use adw::subclass::prelude::*;
 use glib::{clone, Object};
 use gtk::glib::object::Cast;
+use gtk::prelude::*;
 use gtk::{gio, glib, NoSelection};
+use toml_edit::DocumentMut;
 
 use crate::integer_object::IntegerObject;
 use crate::skeleton::Skeleton;
+use crate::utils::settings_path;
 
 // use crate::APP_ID;
 
@@ -22,6 +26,47 @@ impl Window {
     pub fn new(app: &adw::Application) -> Self {
         // Create new window
         Object::builder().property("application", app).build()
+    }
+
+    fn load_settings(&self) {
+        let path = settings_path();
+        let contents = read_to_string(path).expect("Failed to read settings file");
+        let doc = contents.parse::<DocumentMut>().expect("Failed to parse settings file");
+
+        let settings = doc.get("settings").expect("Failed to get settings table");
+        let window_settings = doc.get("window").expect("Failed to get window table");
+        let persistent_keypad = settings
+            .get("persistent_keypad")
+            .expect("Failed to get persistent_keypad value")
+            .as_bool()
+            .expect("Failed to get persistent_keypad as bool");
+        let window_width = i32::try_from(
+            window_settings
+                .get("width")
+                .expect("Failed to get width value")
+                .as_integer()
+                .expect("Failed to get width as integer"),
+        )
+        .expect("Failed to convert width to i32");
+        let window_height = i32::try_from(
+            window_settings
+                .get("height")
+                .expect("Failed to get height value")
+                .as_integer()
+                .expect("Failed to get height as integer"),
+        )
+        .expect("Failed to convert height to i32");
+        let is_maximized = window_settings
+            .get("is_maximized")
+            .expect("Failed to get maximized value")
+            .as_bool()
+            .expect("Failed to get maximized as bool");
+
+        self.imp().persistent_keypad.set(persistent_keypad);
+        self.set_default_size(window_width, window_height);
+        if is_maximized {
+            self.maximize();
+        }
     }
 
     fn mem_hist(&self) -> gio::ListStore {

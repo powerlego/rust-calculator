@@ -193,6 +193,7 @@ impl ObjectImpl for Window {
         self.tabs.set_visible(false);
 
         let obj = self.obj();
+        obj.load_settings();
         obj.setup_mem_hist();
         obj.create_rows();
     }
