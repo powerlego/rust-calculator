@@ -7,7 +7,7 @@ use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::glib::types::StaticTypeExt;
 use gtk::prelude::*;
-use gtk::{gio, glib, CompositeTemplate, Expander, ListBox, Notebook};
+use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook};
 use toml_edit::{table, value, DocumentMut};
 
 use crate::skeleton::Skeleton;
@@ -28,6 +28,8 @@ pub struct Window {
     pub expander_convert:  TemplateChild<Expander>,
     #[template_child]
     pub keypad_buttons:    TemplateChild<Skeleton>,
+    #[template_child]
+    pub keypad_lock:       TemplateChild<Button>,
     pub persistent_keypad: Cell<bool>,
     pub mem_hist:          RefCell<Option<gio::ListStore>>,
 }
@@ -181,6 +183,32 @@ impl Window {
         self.keypad_buttons
             .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
     }
+
+    pub fn update_persistent_keypad(&self, mut show_hide_buttons: bool) {
+        let persistent_keypad = self.persistent_keypad.get();
+        if !persistent_keypad && self.tabs.is_visible() {
+            show_hide_buttons = true;
+        }
+        self.keypad_buttons
+            .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
+        if show_hide_buttons && (persistent_keypad || self.tabs.is_visible()) {
+            self.expander_keypad.set_expanded(persistent_keypad);
+            if persistent_keypad {
+                self.keypad_buttons.set_visible(true);
+            }
+            else {
+                self.show_keypad_widget(false);
+            }
+        }
+        self.keypad_lock.set_icon_name(
+            if persistent_keypad {
+                "changes-prevent-symbolic"
+            }
+            else {
+                "changes-allow-symbolic"
+            },
+        );
+    }
 }
 
 // Trait shared by all GObjects
@@ -194,6 +222,7 @@ impl ObjectImpl for Window {
 
         let obj = self.obj();
         obj.load_settings();
+        obj.setup_callbacks();
         obj.setup_mem_hist();
         obj.create_rows();
     }
