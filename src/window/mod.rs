@@ -1,6 +1,7 @@
 mod imp;
 
-use std::fs::read_to_string;
+use std::fs::File;
+use std::io::Read;
 
 use adw::subclass::prelude::*;
 use glib::{clone, Object};
@@ -29,43 +30,45 @@ impl Window {
     }
 
     fn load_settings(&self) {
-        let path = settings_path();
-        let contents = read_to_string(path).expect("Failed to read settings file");
-        let doc = contents.parse::<DocumentMut>().expect("Failed to parse settings file");
+        if let Ok(mut path) = File::open(settings_path()) {
+            let mut contents = String::new();
+            path.read_to_string(&mut contents)
+                .expect("Failed to read settings file");
+            let doc = contents.parse::<DocumentMut>().expect("Failed to parse settings file");
 
-        let settings = doc.get("settings").expect("Failed to get settings table");
-        let window_settings = doc.get("window").expect("Failed to get window table");
-        let persistent_keypad = settings
-            .get("persistent_keypad")
-            .expect("Failed to get persistent_keypad value")
-            .as_bool()
-            .expect("Failed to get persistent_keypad as bool");
-        let window_width = i32::try_from(
-            window_settings
-                .get("width")
-                .expect("Failed to get width value")
-                .as_integer()
-                .expect("Failed to get width as integer"),
-        )
-        .expect("Failed to convert width to i32");
-        let window_height = i32::try_from(
-            window_settings
-                .get("height")
-                .expect("Failed to get height value")
-                .as_integer()
-                .expect("Failed to get height as integer"),
-        )
-        .expect("Failed to convert height to i32");
-        let is_maximized = window_settings
-            .get("is_maximized")
-            .expect("Failed to get maximized value")
-            .as_bool()
-            .expect("Failed to get maximized as bool");
-
-        self.imp().persistent_keypad.set(persistent_keypad);
-        self.set_default_size(window_width, window_height);
-        if is_maximized {
-            self.maximize();
+            let settings = doc.get("settings").expect("Failed to get settings table");
+            let window_settings = doc.get("window").expect("Failed to get window table");
+            let persistent_keypad = settings
+                .get("persistent_keypad")
+                .expect("Failed to get persistent_keypad value")
+                .as_bool()
+                .expect("Failed to get persistent_keypad as bool");
+            let window_width = i32::try_from(
+                window_settings
+                    .get("width")
+                    .expect("Failed to get width value")
+                    .as_integer()
+                    .expect("Failed to get width as integer"),
+            )
+            .expect("Failed to convert width to i32");
+            let window_height = i32::try_from(
+                window_settings
+                    .get("height")
+                    .expect("Failed to get height value")
+                    .as_integer()
+                    .expect("Failed to get height as integer"),
+            )
+            .expect("Failed to convert height to i32");
+            let is_maximized = window_settings
+                .get("is_maximized")
+                .expect("Failed to get maximized value")
+                .as_bool()
+                .expect("Failed to get maximized as bool");
+            self.imp().persistent_keypad.set(persistent_keypad);
+            self.set_default_size(window_width, window_height);
+            if is_maximized {
+                self.maximize();
+            }
         }
     }
 
