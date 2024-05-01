@@ -149,7 +149,7 @@ impl Window {
             imp.show_tabs(false);
 
             // Set default window settings
-            self.set_default_size(360, 76);
+            self.set_default_size(675, 76);
         }
     }
 
