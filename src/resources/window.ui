@@ -13,12 +13,14 @@
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-bottom">9</property>
                         <child>
                             <object class="GtkBox" id="expanders">
                                 <property name="halign">start</property>
                                 <property name="valign">center</property>
                                 <property name="spacing">12</property>
-                                <property name="margin-start">6</property>
                                 <child>
                                     <object class="GtkBox" id="box_keypadexpander">
                                         <property name="can-focus">False</property>
