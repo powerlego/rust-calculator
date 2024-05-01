@@ -30,6 +30,7 @@ impl Window {
     }
 
     fn load_settings(&self) {
+        let imp = self.imp();
         if let Ok(mut path) = File::open(settings_path()) {
             let mut contents = String::new();
             path.read_to_string(&mut contents)
@@ -44,6 +45,21 @@ impl Window {
                 .expect("Failed to get persistent_keypad value")
                 .as_bool()
                 .expect("Failed to get persistent_keypad as bool");
+            let keypad_expanded = settings
+                .get("keypad_expanded")
+                .expect("Failed to get keypad_expanded value")
+                .as_bool()
+                .expect("Failed to get keypad_expanded as bool");
+            let history_expanded = settings
+                .get("history_expanded")
+                .expect("Failed to get history_expanded value")
+                .as_bool()
+                .expect("Failed to get history_expanded as bool");
+            let convert_expanded = settings
+                .get("convert_expanded")
+                .expect("Failed to get convert_expanded value")
+                .as_bool()
+                .expect("Failed to get convert_expanded as bool");
 
             // Get window settings
             let window_settings = doc.get("window").expect("Failed to get window table");
@@ -71,8 +87,8 @@ impl Window {
                 .expect("Failed to get maximized as bool");
 
             // Set settings
-            self.imp().persistent_keypad.set(persistent_keypad);
-            self.imp().keypad_lock.set_icon_name(
+            imp.persistent_keypad.set(persistent_keypad);
+            imp.keypad_lock.set_icon_name(
                 if persistent_keypad {
                     "changes-prevent-symbolic"
                 }
@@ -80,17 +96,50 @@ impl Window {
                     "changes-allow-symbolic"
                 },
             );
+            imp.expander_keypad.set_expanded(
+                (persistent_keypad && keypad_expanded)
+                    || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded),
+            );
+            imp.expander_history.set_expanded(
+                (persistent_keypad && history_expanded)
+                    || (!persistent_keypad && !keypad_expanded && history_expanded && !convert_expanded),
+            );
+            imp.expander_convert.set_expanded(
+                (persistent_keypad && convert_expanded)
+                    || (!persistent_keypad && !keypad_expanded && !history_expanded && convert_expanded),
+            );
 
             // Set window settings
-            self.set_default_size(window_width, window_height);
+            if !keypad_expanded && !history_expanded && !convert_expanded {
+                self.set_default_size(window_width, 76);
+            }
+            else {
+                self.set_default_size(window_width, window_height);
+            }
+            if !((persistent_keypad && keypad_expanded)
+                || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded))
+                && !((persistent_keypad && (history_expanded || convert_expanded))
+                    || (!persistent_keypad && !keypad_expanded && (history_expanded || convert_expanded)))
+            {
+                imp.keypad_buttons.set_visible(false);
+                imp.tabs.set_visible(false);
+            }
+            else {
+                imp.show_keypad_widget(
+                    (persistent_keypad && keypad_expanded)
+                        || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded),
+                );
+                imp.show_tabs(
+                    (persistent_keypad && (history_expanded || convert_expanded))
+                        || (!persistent_keypad && !keypad_expanded && (history_expanded || convert_expanded)),
+                );
+            }
             if is_maximized {
                 self.maximize();
             }
         }
         else {
             // Set default settings
-            let imp = self.imp();
-
             imp.persistent_keypad.set(false);
             imp.keypad_lock.set_icon_name("changes-allow-symbolic");
             imp.expander_keypad.set_expanded(true);
