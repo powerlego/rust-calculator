@@ -36,13 +36,18 @@ impl Window {
                 .expect("Failed to read settings file");
             let doc = contents.parse::<DocumentMut>().expect("Failed to parse settings file");
 
+            // Get settings
             let settings = doc.get("settings").expect("Failed to get settings table");
-            let window_settings = doc.get("window").expect("Failed to get window table");
+
             let persistent_keypad = settings
                 .get("persistent_keypad")
                 .expect("Failed to get persistent_keypad value")
                 .as_bool()
                 .expect("Failed to get persistent_keypad as bool");
+
+            // Get window settings
+            let window_settings = doc.get("window").expect("Failed to get window table");
+
             let window_width = i32::try_from(
                 window_settings
                     .get("width")
@@ -64,6 +69,8 @@ impl Window {
                 .expect("Failed to get maximized value")
                 .as_bool()
                 .expect("Failed to get maximized as bool");
+
+            // Set settings
             self.imp().persistent_keypad.set(persistent_keypad);
             self.imp().keypad_lock.set_icon_name(
                 if persistent_keypad {
@@ -73,10 +80,27 @@ impl Window {
                     "changes-allow-symbolic"
                 },
             );
+
+            // Set window settings
             self.set_default_size(window_width, window_height);
             if is_maximized {
                 self.maximize();
             }
+        }
+        else {
+            // Set default settings
+            let imp = self.imp();
+
+            imp.persistent_keypad.set(false);
+            imp.keypad_lock.set_icon_name("changes-allow-symbolic");
+            imp.expander_keypad.set_expanded(true);
+            imp.expander_keypad.set_expanded(false);
+            imp.expander_keypad.set_expanded(true);
+            imp.show_keypad_widget(true);
+            imp.show_tabs(false);
+
+            // Set default window settings
+            self.set_default_size(360, 76);
         }
     }
 
