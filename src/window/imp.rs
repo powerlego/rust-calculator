@@ -108,12 +108,11 @@ impl Window {
         }
     }
 
-    fn show_keypad_widget(&self, do_show: bool) {
+    pub fn show_keypad_widget(&self, do_show: bool) {
         if do_show == self.keypad_buttons.is_visible() {
             return;
         }
-        let w: i32 = self.obj().width();
-        let mut h: i32 = self.obj().height();
+        let (w, mut h) = self.obj().default_size();
         let persistent_keypad = self.persistent_keypad.get();
 
         if !persistent_keypad && self.tabs.is_visible() {
@@ -150,12 +149,11 @@ impl Window {
             .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
     }
 
-    fn show_tabs(&self, do_show: bool) {
+    pub fn show_tabs(&self, do_show: bool) {
         if do_show == self.tabs.is_visible() {
             return;
         }
-        let w: i32 = self.obj().width();
-        let mut h: i32 = self.obj().height();
+        let (w, mut h) = self.obj().default_size();
         let persistent_keypad = self.persistent_keypad.get();
 
         if !persistent_keypad && self.keypad_buttons.is_visible() {
@@ -217,9 +215,6 @@ impl ObjectImpl for Window {
         // Call "constructed" on parent
         self.parent_constructed();
 
-        self.keypad_buttons.set_visible(false);
-        self.tabs.set_visible(false);
-
         let obj = self.obj();
         obj.load_settings();
         obj.setup_callbacks();
@@ -237,9 +232,15 @@ impl WindowImpl for Window {
         // Save settings
         let mut settings_table = table();
         settings_table["persistent_keypad"] = value(self.persistent_keypad.get());
+        settings_table["keypad_expanded"] = value(self.expander_keypad.is_expanded());
+        settings_table["history_expanded"] = value(self.expander_history.is_expanded());
+        settings_table["convert_expanded"] = value(self.expander_convert.is_expanded());
+
+        // Window Settings
         let mut window_settings = table();
-        window_settings["height"] = value(i64::try_from(self.obj().height()).expect("Cannot convert height to i64"));
-        window_settings["width"] = value(i64::try_from(self.obj().width()).expect("Cannot convert width to i64"));
+        let (w, h) = self.obj().default_size();
+        window_settings["height"] = value(i64::try_from(h).expect("Cannot convert height to i64"));
+        window_settings["width"] = value(i64::try_from(w).expect("Cannot convert width to i64"));
         window_settings["is_maximized"] = value(self.obj().is_maximized());
 
         let mut doc = DocumentMut::new();

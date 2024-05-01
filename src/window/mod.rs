@@ -30,19 +30,40 @@ impl Window {
     }
 
     fn load_settings(&self) {
+        let imp = self.imp();
         if let Ok(mut path) = File::open(settings_path()) {
             let mut contents = String::new();
             path.read_to_string(&mut contents)
                 .expect("Failed to read settings file");
             let doc = contents.parse::<DocumentMut>().expect("Failed to parse settings file");
 
+            // Get settings
             let settings = doc.get("settings").expect("Failed to get settings table");
-            let window_settings = doc.get("window").expect("Failed to get window table");
+
             let persistent_keypad = settings
                 .get("persistent_keypad")
                 .expect("Failed to get persistent_keypad value")
                 .as_bool()
                 .expect("Failed to get persistent_keypad as bool");
+            let keypad_expanded = settings
+                .get("keypad_expanded")
+                .expect("Failed to get keypad_expanded value")
+                .as_bool()
+                .expect("Failed to get keypad_expanded as bool");
+            let history_expanded = settings
+                .get("history_expanded")
+                .expect("Failed to get history_expanded value")
+                .as_bool()
+                .expect("Failed to get history_expanded as bool");
+            let convert_expanded = settings
+                .get("convert_expanded")
+                .expect("Failed to get convert_expanded value")
+                .as_bool()
+                .expect("Failed to get convert_expanded as bool");
+
+            // Get window settings
+            let window_settings = doc.get("window").expect("Failed to get window table");
+
             let window_width = i32::try_from(
                 window_settings
                     .get("width")
@@ -64,8 +85,10 @@ impl Window {
                 .expect("Failed to get maximized value")
                 .as_bool()
                 .expect("Failed to get maximized as bool");
-            self.imp().persistent_keypad.set(persistent_keypad);
-            self.imp().keypad_lock.set_icon_name(
+
+            // Set settings
+            imp.persistent_keypad.set(persistent_keypad);
+            imp.keypad_lock.set_icon_name(
                 if persistent_keypad {
                     "changes-prevent-symbolic"
                 }
@@ -73,10 +96,60 @@ impl Window {
                     "changes-allow-symbolic"
                 },
             );
-            self.set_default_size(window_width, window_height);
+            imp.expander_keypad.set_expanded(
+                (persistent_keypad && keypad_expanded)
+                    || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded),
+            );
+            imp.expander_history.set_expanded(
+                (persistent_keypad && history_expanded)
+                    || (!persistent_keypad && !keypad_expanded && history_expanded && !convert_expanded),
+            );
+            imp.expander_convert.set_expanded(
+                (persistent_keypad && convert_expanded)
+                    || (!persistent_keypad && !keypad_expanded && !history_expanded && convert_expanded),
+            );
+
+            // Set window settings
+            if !keypad_expanded && !history_expanded && !convert_expanded {
+                self.set_default_size(window_width, 76);
+            }
+            else {
+                self.set_default_size(window_width, window_height);
+            }
+            if !((persistent_keypad && keypad_expanded)
+                || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded))
+                && !((persistent_keypad && (history_expanded || convert_expanded))
+                    || (!persistent_keypad && !keypad_expanded && (history_expanded || convert_expanded)))
+            {
+                imp.keypad_buttons.set_visible(false);
+                imp.tabs.set_visible(false);
+            }
+            else {
+                imp.show_keypad_widget(
+                    (persistent_keypad && keypad_expanded)
+                        || (!persistent_keypad && keypad_expanded && !history_expanded && !convert_expanded),
+                );
+                imp.show_tabs(
+                    (persistent_keypad && (history_expanded || convert_expanded))
+                        || (!persistent_keypad && !keypad_expanded && (history_expanded || convert_expanded)),
+                );
+            }
             if is_maximized {
                 self.maximize();
             }
+        }
+        else {
+            // Set default settings
+            imp.persistent_keypad.set(false);
+            imp.keypad_lock.set_icon_name("changes-allow-symbolic");
+            imp.expander_keypad.set_expanded(true);
+            imp.expander_keypad.set_expanded(false);
+            imp.expander_keypad.set_expanded(true);
+            imp.show_keypad_widget(true);
+            imp.show_tabs(false);
+
+            // Set default window settings
+            self.set_default_size(360, 76);
         }
     }
 
