@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
     <template class="BasicNumpad" parent="GtkGrid">
-        <property name="margin">12</property>
         <property name="row-spacing">6</property>
         <property name="column-spacing">6</property>
         <child>
