@@ -3,36 +3,72 @@
     <template class="MainWindow" parent="AdwApplicationWindow">
         <property name="title" translatable="yes">Calculator</property>
         <child>
-            <object class="AdwToolbarView">
-                <child type="top">
+            <object class="GtkBox" id="top_vbox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">0</property>
+                <child>
                     <object class="AdwHeaderBar">
                     </object>
                 </child>
-                <property name="content">
-                    <object class="GtkBox" id="boxes">
-                        <property name="can-focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="margin-bottom">9</property>
+                <child>
+                    <object class="GtkBox" id="main_vbox">
                         <child>
-                            <object class="GtkBox" id="expanders">
-                                <property name="halign">start</property>
-                                <property name="valign">center</property>
-                                <property name="spacing">12</property>
+                            <object class="GtkBox" id="boxes">
+                                <property name="can-focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">6</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-bottom">9</property>
                                 <child>
-                                    <object class="GtkBox" id="box_keypadexpander">
-                                        <property name="can-focus">False</property>
-                                        <property name="spacing">6</property>
+                                    <object class="GtkBox" id="expanders">
+                                        <property name="halign">start</property>
+                                        <property name="valign">center</property>
+                                        <property name="spacing">12</property>
                                         <child>
-                                            <object class="GtkExpander" id="expander_keypad">
+                                            <object class="GtkBox" id="box_keypadexpander">
+                                                <property name="can-focus">False</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                    <object class="GtkExpander" id="expander_keypad">
+                                                        <property name="can-focus">True</property>
+                                                        <signal name="notify::expanded" handler="on_expander_keypad_expanded" swapped="true" />
+                                                        <child type="label">
+                                                            <object class="GtkLabel">
+                                                                <property name="can-focus">False</property>
+                                                                <property name="label" translatable="yes">_Keypad</property>
+                                                                <property name="use-underline">True</property>
+                                                                <style>
+                                                                    <class name="expand-label" />
+                                                                </style>
+                                                            </object>
+                                                        </child>
+                                                        <child>
+                                                            <placeholder />
+                                                        </child>
+                                                    </object>
+                                                </child>
+                                                <child>
+                                                    <object class="GtkButton" id="keypad_lock">
+                                                        <property name="can-focus">False</property>
+                                                        <property name="icon-name">changes-allow-symbolic</property>
+                                                        <property name="has-frame">False</property>
+                                                        <property name="tooltip-text" translatable="yes">Toggles persistent keypad (makes it possible to show keypad and history simultaneously)</property>
+                                                        <style>
+                                                            <class name="keypad-lock" />
+                                                        </style>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </child>
+                                        <child>
+                                            <object class="GtkExpander" id="expander_history">
                                                 <property name="can-focus">True</property>
-                                                <signal name="notify::expanded" handler="on_expander_keypad_expanded" swapped="true" />
+                                                <signal name="notify::expanded" handler="on_expander_history_expanded" swapped="true" />
                                                 <child type="label">
                                                     <object class="GtkLabel">
+                                                        <property name="label" translatable="yes">_History</property>
                                                         <property name="can-focus">False</property>
-                                                        <property name="label" translatable="yes">_Keypad</property>
                                                         <property name="use-underline">True</property>
                                                         <style>
                                                             <class name="expand-label" />
@@ -45,110 +81,80 @@
                                             </object>
                                         </child>
                                         <child>
-                                            <object class="GtkButton" id="keypad_lock">
-                                                <property name="can-focus">False</property>
-                                                <property name="icon-name">changes-allow-symbolic</property>
-                                                <property name="has-frame">False</property>
-                                                <property name="tooltip-text" translatable="yes">Toggles persistent keypad (makes it possible to show keypad and history simultaneously)</property>
-                                                <style>
-                                                    <class name="keypad-lock" />
-                                                </style>
-                                            </object>
-                                        </child>
-                                    </object>
-                                </child>
-                                <child>
-                                    <object class="GtkExpander" id="expander_history">
-                                        <property name="can-focus">True</property>
-                                        <signal name="notify::expanded" handler="on_expander_history_expanded" swapped="true" />
-                                        <child type="label">
-                                            <object class="GtkLabel">
-                                                <property name="label" translatable="yes">_History</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="use-underline">True</property>
-                                                <style>
-                                                    <class name="expand-label" />
-                                                </style>
-                                            </object>
-                                        </child>
-                                        <child>
-                                            <placeholder />
-                                        </child>
-                                    </object>
-                                </child>
-                                <child>
-                                    <object class="GtkExpander" id="expander_convert">
-                                        <property name="can-focus">True</property>
-                                        <property name="hexpand">True</property>
-                                        <signal name="notify::expanded" handler="on_expander_convert_expanded" swapped="true" />
-                                        <child type="label">
-                                            <object class="GtkLabel">
-                                                <property name="label" translatable="yes">_Conversion</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="use-underline">True</property>
-                                                <style>
-                                                    <class name="expand-label" />
-                                                </style>
-                                            </object>
-                                        </child>
-                                        <child>
-                                            <placeholder />
-                                        </child>
-                                    </object>
-                                </child>
-                            </object>
-                        </child>
-                        <child>
-                            <object class="GtkNotebook" id="tabs">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="tab-pos">bottom</property>
-                                <property name="show-tabs">False</property>
-                                <property name="show-border">False</property>
-                                <child>
-                                    <object class="GtkNotebookPage">
-                                        <property name="tab-fill">False</property>
-                                        <property name="child">
-                                            <object class="GtkScrolledWindow" id="history_window">
+                                            <object class="GtkExpander" id="expander_convert">
+                                                <property name="can-focus">True</property>
                                                 <property name="hexpand">True</property>
+                                                <signal name="notify::expanded" handler="on_expander_convert_expanded" swapped="true" />
+                                                <child type="label">
+                                                    <object class="GtkLabel">
+                                                        <property name="label" translatable="yes">_Conversion</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="use-underline">True</property>
+                                                        <style>
+                                                            <class name="expand-label" />
+                                                        </style>
+                                                    </object>
+                                                </child>
+                                                <child>
+                                                    <placeholder />
+                                                </child>
+                                            </object>
+                                        </child>
+                                    </object>
+                                </child>
+                                <child>
+                                    <object class="GtkNotebook" id="tabs">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
+                                        <property name="tab-pos">bottom</property>
+                                        <property name="show-tabs">False</property>
+                                        <property name="show-border">False</property>
+                                        <child>
+                                            <object class="GtkNotebookPage">
+                                                <property name="tab-fill">False</property>
                                                 <property name="child">
-                                                    <object class="GtkListBox" id="mem_hist_list" />
+                                                    <object class="GtkScrolledWindow" id="history_window">
+                                                        <property name="hexpand">True</property>
+                                                        <property name="child">
+                                                            <object class="GtkListBox" id="mem_hist_list" />
+                                                        </property>
+                                                    </object>
+                                                </property>
+                                                <property name="tab">
+                                                    <object class="GtkLabel" id="label_history">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">History</property>
+                                                    </object>
                                                 </property>
                                             </object>
-                                        </property>
-                                        <property name="tab">
-                                            <object class="GtkLabel" id="label_history">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">History</property>
+                                        </child>
+                                        <child>
+                                            <object class="GtkNotebookPage">
+                                                <property name="tab-fill">False</property>
+                                                <property name="child">
+                                                    <object class="Skeleton" id="conversion_window" />
+                                                </property>
+                                                <property name="tab">
+                                                    <object class="GtkLabel" id="conversion_label">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="label" translatable="yes">Convert</property>
+                                                    </object>
+                                                </property>
                                             </object>
-                                        </property>
+                                        </child>
                                     </object>
                                 </child>
                                 <child>
-                                    <object class="GtkNotebookPage">
-                                        <property name="tab-fill">False</property>
-                                        <property name="child">
-                                            <object class="Skeleton" id="conversion_window" />
-                                        </property>
-                                        <property name="tab">
-                                            <object class="GtkLabel" id="conversion_label">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="label" translatable="yes">Convert</property>
-                                            </object>
-                                        </property>
-                                    </object>
+                                    <object class="Skeleton" id="keypad_buttons" />
                                 </child>
                             </object>
                         </child>
-                        <child>
-                            <object class="Skeleton" id="keypad_buttons" />
-                        </child>
                     </object>
-                </property>
+                </child>
             </object>
         </child>
     </template>
