@@ -155,7 +155,7 @@
                                                 <object class="GtkStackPage">
                                                     <property name="name">basic</property>
                                                     <property name="child">
-                                                        <object class="BasicNumpad"/>
+                                                        <object class="BasicNumpad" id="basic_numpad"/>
                                                     </property>
                                                 </object>
                                             </child>
