@@ -149,7 +149,18 @@
                                     </object>
                                 </child>
                                 <child>
-                                    <object class="Skeleton" id="keypad_buttons" />
+                                    <object class="GtkBox" id="keypad_buttons">
+                                        <object class="GtkStack" id="keypad_stack">
+                                            <child>
+                                                <object class="GtkStackPage">
+                                                    <property name="name">basic</property>
+                                                    <property name="child">
+                                                        <object class="Skeleton"/>
+                                                    </property>
+                                                </object>
+                                            </child>
+                                        </object>
+                                    </object>
                                 </child>
                             </object>
                         </child>
