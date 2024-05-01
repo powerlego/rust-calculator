@@ -116,7 +116,7 @@ impl Window {
         let persistent_keypad = self.persistent_keypad.get();
 
         if !persistent_keypad && self.tabs.is_visible() {
-            h -= self.tabs.height();
+            h -= self.tabs.height() + 9;
         }
         if persistent_keypad && self.expander_convert.is_expanded() {
             if do_show {
@@ -141,7 +141,7 @@ impl Window {
             self.obj().set_default_size(w, h);
         }
         else {
-            h -= self.keypad_buttons.height();
+            h -= self.keypad_buttons.height() + 9;
             self.keypad_buttons.set_visible(false);
             self.obj().set_default_size(w, h);
         }
@@ -157,7 +157,7 @@ impl Window {
         let persistent_keypad = self.persistent_keypad.get();
 
         if !persistent_keypad && self.keypad_buttons.is_visible() {
-            h -= self.keypad_buttons.height();
+            h -= self.keypad_buttons.height() + 9;
         }
         if do_show {
             self.tabs.set_visible(true);
@@ -174,7 +174,7 @@ impl Window {
             self.obj().set_default_size(w, h);
         }
         else {
-            h -= self.tabs.height();
+            h -= self.tabs.height() + 9;
             self.tabs.set_visible(false);
             self.obj().set_default_size(w, h);
         }
