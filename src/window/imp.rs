@@ -7,7 +7,7 @@ use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::glib::types::StaticTypeExt;
 use gtk::prelude::*;
-use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook};
+use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook,Box};
 use toml_edit::{table, value, DocumentMut};
 
 use crate::skeleton::Skeleton;
@@ -28,7 +28,7 @@ pub struct Window {
     #[template_child]
     pub expander_convert:  TemplateChild<Expander>,
     #[template_child]
-    pub keypad_buttons:    TemplateChild<Skeleton>,
+    pub keypad_buttons:    TemplateChild<Box>,
     #[template_child]
     pub keypad_lock:       TemplateChild<Button>,
     pub persistent_keypad: Cell<bool>,
