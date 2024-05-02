@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::Read;
 
 use adw::subclass::prelude::*;
+use gio::ActionEntry;
 use glib::{clone, Object};
 use gtk::glib::object::Cast;
 use gtk::prelude::*;
@@ -192,5 +193,33 @@ impl Window {
     fn create_rows(&self) {
         let vector: Vec<IntegerObject> = (0..=10).map(IntegerObject::new).collect();
         self.mem_hist().extend_from_slice(&vector);
+    }
+
+    fn setup_actions(&self) {
+        let action_num_insert = ActionEntry::builder("num-insert")
+            .parameter_type(Some(&i32::static_variant_type()))
+            .activate(move |_: &Self, _action, parameter| {
+                let parameter = parameter
+                    .expect("Could not get parameter.")
+                    .get::<i32>()
+                    .expect("The variant needs to be of type `i32`.");
+
+                println!("Num insert: {}", parameter);
+            })
+            .build();
+        let action_op_insert = ActionEntry::builder("op-insert")
+            .parameter_type(Some(&String::static_variant_type()))
+            .activate(move |_: &Self, _action, parameter| {
+                let parameter = parameter
+                    .expect("Could not get parameter.")
+                    .get::<String>()
+                    .expect("The variant needs to be of type `String`.");
+
+                println!("Op insert: {}", parameter);
+            })
+            .build();
+
+        self.add_action_entries([action_num_insert]);
+        self.add_action_entries([action_op_insert]);
     }
 }

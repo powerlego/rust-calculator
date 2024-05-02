@@ -7,10 +7,11 @@ use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::glib::types::StaticTypeExt;
 use gtk::prelude::*;
-use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook};
+use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook,Box};
 use toml_edit::{table, value, DocumentMut};
 
 use crate::skeleton::Skeleton;
+use crate::basic_numpad::BasicNumpad;
 use crate::utils::settings_path;
 
 #[derive(CompositeTemplate, Default)]
@@ -27,7 +28,7 @@ pub struct Window {
     #[template_child]
     pub expander_convert:  TemplateChild<Expander>,
     #[template_child]
-    pub keypad_buttons:    TemplateChild<Skeleton>,
+    pub keypad_buttons:    TemplateChild<Box>,
     #[template_child]
     pub keypad_lock:       TemplateChild<Button>,
     pub persistent_keypad: Cell<bool>,
@@ -44,6 +45,7 @@ impl ObjectSubclass for Window {
 
     fn class_init(klass: &mut Self::Class) {
         Skeleton::ensure_type();
+        BasicNumpad::ensure_type();
 
         klass.bind_template();
         klass.bind_template_callbacks();
@@ -218,6 +220,7 @@ impl ObjectImpl for Window {
         let obj = self.obj();
         obj.load_settings();
         obj.setup_callbacks();
+        obj.setup_actions();
         obj.setup_mem_hist();
         obj.create_rows();
     }

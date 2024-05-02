@@ -2,6 +2,7 @@ mod integer_object;
 mod skeleton;
 mod utils;
 mod window;
+mod basic_numpad;
 use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
