@@ -3,7 +3,6 @@ mod skeleton;
 mod utils;
 mod window;
 mod basic_numpad;
-mod calculator_button;
 use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
