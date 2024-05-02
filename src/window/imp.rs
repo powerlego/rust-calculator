@@ -220,6 +220,7 @@ impl ObjectImpl for Window {
         let obj = self.obj();
         obj.load_settings();
         obj.setup_callbacks();
+        obj.setup_actions();
         obj.setup_mem_hist();
         obj.create_rows();
     }
