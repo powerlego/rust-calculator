@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="CalculationDisplay" parent="GtkEntry">
+        <property name="max-length">16</property>
+        <property name="xalign">1</property>
+        <property name="editable">False</property>
+        <property name="name">calculation-display</property>
+    </template>
+</interface>
