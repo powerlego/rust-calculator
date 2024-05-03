@@ -12,5 +12,6 @@ headerbar .title {
 
 .calculation-display {
   font-size: 64px;
+  font-weight: bold;
   padding: 6px 18px;
 }
