@@ -22,6 +22,7 @@
                                 <child>
                                     <object class="CalculationDisplay" id="calculation_display">
                                         <property name="max-length">16</property>
+                                        <property name="text">0</property>
                                     </object>
                                 </child>
                             </object>
