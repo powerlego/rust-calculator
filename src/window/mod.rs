@@ -1,3 +1,6 @@
+//! This module contains the implementation of the [`Window`] object. The [`Window`] object is a subclass of
+//! [`adw::ApplicationWindow`] and is the main window of the application.
+
 mod imp;
 
 use std::fs::File;
@@ -18,6 +21,11 @@ use crate::utils::settings_path;
 // use crate::APP_ID;
 
 glib::wrapper! {
+    /// The Main [`Window`] of the application. It is a subclass of [`adw::ApplicationWindow`].
+    /// # Actions
+    /// The [`Window`] implements the following actions:
+    /// * `num-insert` - Inserts a number into the display.
+    /// * `op-insert` - Inserts an operator into the display.
     pub struct Window(ObjectSubclass<imp::Window>)
         @extends adw::ApplicationWindow, gtk::ApplicationWindow, gtk::Window, gtk::Widget,
         @implements gio::ActionGroup, gio::ActionMap, gtk::Accessible, gtk::Buildable,
@@ -25,11 +33,18 @@ glib::wrapper! {
 }
 
 impl Window {
+
+    /// Creates a new [`Window`].
     pub fn new(app: &adw::Application) -> Self {
         // Create new window
         Object::builder().property("application", app).build()
     }
 
+    /// Load the settings from the settings file and apply them to the window.
+    /// If the settings file does not exist, it will set the default settings.
+    /// 
+    /// # Arguments
+    /// * `self` - The [`Window`] object.
     fn load_settings(&self) {
         let imp = self.imp();
         if let Ok(mut path) = File::open(settings_path()) {
@@ -154,19 +169,21 @@ impl Window {
         }
     }
 
-    fn mem_hist(&self) -> gio::ListStore {
+    /// The [`gio::ListStore`] representing the calculation history.
+    fn history(&self) -> gio::ListStore {
         self.imp()
-            .mem_hist
+            .history
             .borrow()
             .clone()
             .expect("Could not get current mem_hist")
     }
 
-    fn setup_mem_hist(&self) {
+    /// Sets up the history list on first creation.
+    fn setup_history(&self) {
         let model = gio::ListStore::new::<IntegerObject>();
-        self.imp().mem_hist.replace(Some(model));
+        self.imp().history.replace(Some(model));
 
-        let selection_model = NoSelection::new(Some(self.mem_hist()));
+        let selection_model = NoSelection::new(Some(self.history()));
         self.imp().mem_hist_list.bind_model(
             Some(&selection_model),
             clone!(@weak self as window => @default-panic, move |_|{
@@ -176,11 +193,13 @@ impl Window {
         );
     }
 
+    /// Creates a new row widget for the history list.
     fn create_integer_row(&self) -> Skeleton {
         let row = Skeleton::new();
         row
     }
 
+    /// Sets up the callbacks utilized by the child widgets.
     fn setup_callbacks(&self) {
         self.imp()
             .keypad_lock
@@ -190,11 +209,13 @@ impl Window {
             }));
     }
 
+    /// Creates the rows for the history list.
     fn create_rows(&self) {
         let vector: Vec<IntegerObject> = (0..=10).map(IntegerObject::new).collect();
-        self.mem_hist().extend_from_slice(&vector);
+        self.history().extend_from_slice(&vector);
     }
 
+    /// Sets up the actions for the [`Window`].
     fn setup_actions(&self) {
         let action_num_insert = ActionEntry::builder("num-insert")
             .parameter_type(Some(&i32::static_variant_type()))

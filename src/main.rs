@@ -1,8 +1,8 @@
+mod basic_numpad;
 mod integer_object;
 mod skeleton;
 mod utils;
 mod window;
-mod basic_numpad;
 use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
@@ -23,6 +23,7 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
+/// Loads the CSS from the resource file
 fn load_css() {
     let provider = CssProvider::new();
     provider.load_from_resource("/com/nc/calculator/style.css");
@@ -33,6 +34,11 @@ fn load_css() {
     );
 }
 
+/// Builds the UI
+/// # Arguments
+/// * `app` - The application
+/// # Returns
+/// None
 fn build_ui(app: &adw::Application) {
     // Create new window and present it
     let window = Window::new(app);

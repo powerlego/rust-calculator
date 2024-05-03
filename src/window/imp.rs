@@ -1,4 +1,5 @@
-// Module: window
+//! This file contains the implementation of the `Window` widget.
+
 use std::cell::{Cell, RefCell};
 use std::fs::File;
 use std::io::Write;
@@ -14,6 +15,11 @@ use crate::skeleton::Skeleton;
 use crate::basic_numpad::BasicNumpad;
 use crate::utils::settings_path;
 
+/// The `Window` widget.
+/// # Actions
+/// The `Window` implements the following actions:
+/// * `num-insert` - Inserts a number into the display.
+/// * `op-insert` - Inserts an operator into the display.
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/nc/calculator/window.ui")]
 pub struct Window {
@@ -32,7 +38,7 @@ pub struct Window {
     #[template_child]
     pub keypad_lock:       TemplateChild<Button>,
     pub persistent_keypad: Cell<bool>,
-    pub mem_hist:          RefCell<Option<gio::ListStore>>,
+    pub history:          RefCell<Option<gio::ListStore>>,
 }
 
 #[glib::object_subclass]
@@ -221,7 +227,7 @@ impl ObjectImpl for Window {
         obj.load_settings();
         obj.setup_callbacks();
         obj.setup_actions();
-        obj.setup_mem_hist();
+        obj.setup_history();
         obj.create_rows();
     }
 }
