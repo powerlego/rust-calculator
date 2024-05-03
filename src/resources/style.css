@@ -9,3 +9,8 @@ headerbar .title {
 .keypad-lock {
   padding: 0;
 }
+
+.calculation-display {
+  font-size: 64px;
+  padding: 6px 18px;
+}
