@@ -4,7 +4,6 @@
         <file compressed="true" preprocess="xml-stripblanks">window.ui</file>
         <file compressed="true" preprocess="xml-stripblanks">skeleton.ui</file>
         <file compressed="true" preprocess="xml-stripblanks">basic_numpad.ui</file>
-        <file compressed="true" preprocess="xml-stripblanks">input_display.ui</file>
         <file compressed="true">style.css</file>
     </gresource>
 </gresources>
