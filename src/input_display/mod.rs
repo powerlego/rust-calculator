@@ -1,8 +1,8 @@
 mod imp;
 
-use glib::{clone, Object};
+use glib::Object;
 use gtk::prelude::*;
-use gtk::{gdk, gio, glib};
+use gtk::{gdk, glib};
 
 glib::wrapper! {
     pub struct InputDisplay(ObjectSubclass<imp::InputDisplay>)
