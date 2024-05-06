@@ -16,7 +16,7 @@ use toml_edit::DocumentMut;
 
 use crate::integer_object::IntegerObject;
 use crate::skeleton::Skeleton;
-use crate::utils::settings_path;
+use crate::utils::{display_thousands_separator, settings_path};
 
 // use crate::APP_ID;
 
@@ -212,7 +212,10 @@ impl Window {
         });
 
         self.imp().input_display.connect_changed(|disp| {
-            println!("Buffer changed: {}", disp.text().as_str());
+            let binding = disp.text();
+            let text = binding.trim();
+            if text.is_empty() {}
+            println!("Text: {}", text);
         });
     }
 
