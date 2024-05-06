@@ -33,7 +33,6 @@ glib::wrapper! {
 }
 
 impl Window {
-
     /// Creates a new [`Window`].
     pub fn new(app: &adw::Application) -> Self {
         // Create new window
@@ -42,7 +41,7 @@ impl Window {
 
     /// Load the settings from the settings file and apply them to the window.
     /// If the settings file does not exist, it will set the default settings.
-    /// 
+    ///
     /// # Arguments
     /// * `self` - The [`Window`] object.
     fn load_settings(&self) {
@@ -207,6 +206,14 @@ impl Window {
                 window.imp().persistent_keypad.set(!window.imp().persistent_keypad.get());
                 window.imp().update_persistent_keypad(false);
             }));
+
+        self.imp().input_display.connect_paste_clipboard(|input_display| {
+            input_display.select_region(0, -1);
+        });
+
+        self.imp().input_display.connect_changed(|disp| {
+            println!("Buffer changed: {}", disp.text().as_str());
+        });
     }
 
     /// Creates the rows for the history list.

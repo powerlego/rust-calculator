@@ -8,12 +8,11 @@ use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
 use gtk::glib::types::StaticTypeExt;
 use gtk::prelude::*;
-use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook,Box};
+use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook,Box,Text};
 use toml_edit::{table, value, DocumentMut};
 
 use crate::skeleton::Skeleton;
 use crate::basic_numpad::BasicNumpad;
-use crate::input_display::InputDisplay;
 use crate::utils::settings_path;
 
 /// The `Window` widget.
@@ -38,6 +37,8 @@ pub struct Window {
     pub keypad_buttons:    TemplateChild<Box>,
     #[template_child]
     pub keypad_lock:       TemplateChild<Button>,
+    #[template_child]
+    pub input_display:     TemplateChild<Text>,
     pub persistent_keypad: Cell<bool>,
     pub history:          RefCell<Option<gio::ListStore>>,
 }
@@ -53,7 +54,6 @@ impl ObjectSubclass for Window {
     fn class_init(klass: &mut Self::Class) {
         Skeleton::ensure_type();
         BasicNumpad::ensure_type();
-        InputDisplay::ensure_type();
 
         klass.bind_template();
         klass.bind_template_callbacks();
@@ -224,6 +224,8 @@ impl ObjectImpl for Window {
     fn constructed(&self) {
         // Call "constructed" on parent
         self.parent_constructed();
+
+        self.input_display.set_text("0");
 
         let obj = self.obj();
         obj.load_settings();

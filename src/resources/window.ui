@@ -20,7 +20,14 @@
                                 <property name="spacing">0</property>
 
                                 <child>
-                                    <object class="InputDisplay" id="input_display">
+                                    <object class="GtkText" id="input_display">
+                                        <property name="xalign">1</property>
+                                        <!-- <property name="editable">False</property> -->
+                                        <property name="can-focus">False</property>
+                                        <style>
+                                            <class name="background" />
+                                            <class name="input-display" />
+                                        </style>
                                     </object>
                                 </child>
                             </object>
