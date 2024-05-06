@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <template class="InputDisplay" parent="GtkEntry">
-        
-        <property name="xalign">1</property>
-        <property name="editable">False</property>
+    <template class="InputDisplay" parent="GtkTextView">
+        <property name="justification">GTK_JUSTIFY_RIGHT</property>
+        <!-- <property name="editable">False</property> -->
         <property name="can-focus">False</property>
         <style>
             <class name="background"/>

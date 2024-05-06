@@ -1,15 +1,16 @@
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
+use gtk::prelude::*;
 use gtk::{glib, CompositeTemplate};
-
 
 #[derive(CompositeTemplate, Default)]
 #[template(resource = "/com/nc/calculator/input_display.ui")]
-pub struct InputDisplay {}
+pub struct InputDisplay {
+}
 
 #[glib::object_subclass]
 impl ObjectSubclass for InputDisplay {
-    type ParentType = gtk::Entry;
+    type ParentType = gtk::TextView;
     type Type = super::InputDisplay;
 
     const NAME: &'static str = "InputDisplay";
@@ -24,8 +25,16 @@ impl ObjectSubclass for InputDisplay {
 }
 
 impl ObjectImpl for InputDisplay {
+    fn constructed(&self) {
+        self.parent_constructed();
+
+        let obj = self.obj();
+        obj.remove_css_class("view");
+        obj.buffer().set_text("0");
+        obj.setup_callbacks();
+    }
 }
 
 impl WidgetImpl for InputDisplay {}
 
-impl EntryImpl for InputDisplay {}
+impl TextViewImpl for InputDisplay {}
