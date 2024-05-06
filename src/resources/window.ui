@@ -20,7 +20,7 @@
                                 <property name="spacing">0</property>
 
                                 <child>
-                                    <object class="CalculationDisplay" id="calculation_display">
+                                    <object class="InputDisplay" id="input_display">
                                         <property name="max-length">16</property>
                                         <property name="text">0</property>
                                     </object>

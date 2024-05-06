@@ -4,15 +4,15 @@ use gtk::{glib, CompositeTemplate};
 
 
 #[derive(CompositeTemplate, Default)]
-#[template(resource = "/com/nc/calculator/calculation_display.ui")]
-pub struct CalculationDisplay {}
+#[template(resource = "/com/nc/calculator/input_display.ui")]
+pub struct InputDisplay {}
 
 #[glib::object_subclass]
-impl ObjectSubclass for CalculationDisplay {
+impl ObjectSubclass for InputDisplay {
     type ParentType = gtk::Entry;
-    type Type = super::CalculationDisplay;
+    type Type = super::InputDisplay;
 
-    const NAME: &'static str = "CalculationDisplay";
+    const NAME: &'static str = "InputDisplay";
 
     fn class_init(klass: &mut Self::Class) {
         klass.bind_template();
@@ -23,9 +23,9 @@ impl ObjectSubclass for CalculationDisplay {
     }
 }
 
-impl ObjectImpl for CalculationDisplay {
+impl ObjectImpl for InputDisplay {
 }
 
-impl WidgetImpl for CalculationDisplay {}
+impl WidgetImpl for InputDisplay {}
 
-impl EntryImpl for CalculationDisplay {}
+impl EntryImpl for InputDisplay {}

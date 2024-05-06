@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <template class="CalculationDisplay" parent="GtkEntry">
+    <template class="InputDisplay" parent="GtkEntry">
         
         <property name="xalign">1</property>
         <property name="editable">False</property>
         <property name="can-focus">False</property>
         <style>
             <class name="background"/>
-            <class name="calculation-display"/>
+            <class name="input-display"/>
         </style>
     </template>
 </interface>
