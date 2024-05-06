@@ -23,12 +23,6 @@ impl InputDisplay {
                 .clipboard();
             buffer.delete(&mut buffer.start_iter(), &mut buffer.end_iter());
             buffer.paste_clipboard(&clipboard, None, false);
-            // clipboard.read_text_async(gio::Cancellable::NONE, move |res| {
-            //     if let Ok(text) = res {
-            //         let val = text.expect("Unable to get text from clipboard");
-            //         println!("Pasted text: {}", val);
-            //         buffer.de                }
-            // });
         });
         self.buffer().connect_changed(|buffer| {
             println!(
