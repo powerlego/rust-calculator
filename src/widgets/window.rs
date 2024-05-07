@@ -510,7 +510,7 @@ impl Window {
                         }
                     }
                     Key::_8 => {
-                        if !state.contains(gdk::ModifierType::SHIFT_MASK) {
+                        if !state.intersects(gdk::ModifierType::SHIFT_MASK) {
                             window.insert_display_text("8");
                         }
                     }
