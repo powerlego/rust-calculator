@@ -4,11 +4,12 @@ use std::fs::File;
 use std::io::Read;
 
 use adw::subclass::prelude::*;
+use gdk::Key;
 use gio::ActionEntry;
 use glib::{clone, Object};
 use gtk::glib::object::Cast;
 use gtk::prelude::*;
-use gtk::{gio, glib, NoSelection};
+use gtk::{gdk, gio, glib, EventControllerKey, NoSelection};
 use toml_edit::DocumentMut;
 
 use crate::integer_object::IntegerObject;
@@ -249,6 +250,7 @@ mod imp {
             obj.load_settings();
             obj.setup_callbacks();
             obj.setup_actions();
+            obj.setup_event_controllers();
             obj.setup_history();
             obj.create_rows();
         }
@@ -466,6 +468,102 @@ impl Window {
         row
     }
 
+    fn insert_display_text(&self, text: &str) {
+        if self.imp().input_display.text().as_str() == "0" {
+            self.imp().input_display.block_signal(
+                &self
+                    .imp()
+                    .input_display_changed_signal
+                    .borrow()
+                    .as_ref()
+                    .expect("Could not get input_display_changed_signal"),
+            );
+            self.imp().input_display.set_text("");
+            self.imp().input_display.unblock_signal(
+                &self
+                    .imp()
+                    .input_display_changed_signal
+                    .borrow()
+                    .as_ref()
+                    .expect("Could not get input_display_changed_signal"),
+            );
+        }
+        let mut pos = -1;
+        self.imp().input_display.insert_text(text, &mut pos);
+    }
+
+    fn setup_event_controllers(&self) {
+        let controller = EventControllerKey::builder()
+            .name("keypad-controller")
+            .propagation_phase(gtk::PropagationPhase::Target)
+            .propagation_limit(gtk::PropagationLimit::SameNative)
+            .build();
+        controller.connect_key_released(
+            clone!(@weak self as window => move |_controller, key, _keyval, state| {
+                match key {
+                    Key::BackSpace => {
+                        if window.imp().input_display.text().as_str() == "0" {
+                            return;
+                        }
+                        window
+                            .imp()
+                            .input_display
+                            .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
+                    }
+                    Key::Return | Key::KP_Enter => {
+                        // Calculate the result
+                    }
+                    Key::KP_Add => {
+                        // Insert the addition operator
+                    }
+                    Key::KP_Subtract | Key::minus => {
+                        // Insert the subtraction operator
+                    }
+                    Key::KP_Multiply => {
+                        // Insert the multiplication operator
+                    }
+                    Key::KP_Divide => {
+                        // Insert the division operator
+                    }
+                    Key::KP_Decimal => {
+                        // Insert the decimal point
+                    }
+                    Key::_8 => {
+                        if state.contains(gdk::ModifierType::SHIFT_MASK){
+                            // Insert the multiplication operator
+                        }
+                        else {
+                            window.insert_display_text("8");
+                        }
+                    }
+                    Key::_0
+                    | Key::_1
+                    | Key::_2
+                    | Key::_3
+                    | Key::_4
+                    | Key::_5
+                    | Key::_6
+                    | Key::_7
+                    | Key::_9
+                    | Key::KP_0
+                    | Key::KP_1
+                    | Key::KP_2
+                    | Key::KP_3
+                    | Key::KP_4
+                    | Key::KP_5
+                    | Key::KP_6
+                    | Key::KP_7
+                    | Key::KP_8
+                    | Key::KP_9 => {
+                        window.insert_display_text(&key.to_unicode().expect("Could not get unicode value").to_string().as_str());
+                    }
+                    _ => {}
+                }
+            }),
+        );
+        self.add_controller(controller);
+    }
+
     /// Sets up the callbacks utilized by the child widgets.
     fn setup_callbacks(&self) {
         self.imp()
@@ -484,7 +582,7 @@ impl Window {
             .input_display_changed_signal
             .replace(Some(self.imp().input_display.connect_changed(
                 clone!(@weak self as window => move |disp| {
-                    let binding = disp.text();
+                    let binding = disp.text().replace(",", "");
                     let text = binding.trim();
                     println!("Text: {}", text);
                     if text.is_empty(){
