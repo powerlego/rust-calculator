@@ -17,12 +17,12 @@
             </object>
         </child>
         <child>
-            <object class="GtkButton" id="button_clear_everything">
+            <object class="GtkButton" id="button_clear_entry">
                 <property name="label" translatable="yes">CE</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="action-name">win.op-insert</property>
-                <property name="action-target">'clear-everything'</property>
+                <property name="action-target">'clear-entry'</property>
                 <layout>
                     <property name="column">1</property>
                     <property name="row">0</property>
