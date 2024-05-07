@@ -499,7 +499,7 @@ impl Window {
             .propagation_limit(gtk::PropagationLimit::SameNative)
             .build();
         controller.connect_key_pressed(
-            clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, _state| {
+            clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, state| {
                 match key {
                     Key::BackSpace => {
                         if window.imp().input_display.text().as_str() != "0" {
@@ -507,6 +507,11 @@ impl Window {
                             .imp()
                             .input_display
                             .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
+                        }
+                    }
+                    Key::_8 => {
+                        if !state.contains(gdk::ModifierType::SHIFT_MASK) {
+                            window.insert_display_text("8");
                         }
                     }
                     Key::_0
@@ -517,7 +522,6 @@ impl Window {
                     | Key::_5
                     | Key::_6
                     | Key::_7
-                    | Key::_8
                     | Key::_9
                     | Key::KP_0
                     | Key::KP_1
