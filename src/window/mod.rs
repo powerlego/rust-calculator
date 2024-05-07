@@ -46,6 +46,8 @@ impl Window {
     /// * `self` - The [`Window`] object.
     fn load_settings(&self) {
         let imp = self.imp();
+        imp.tabs.set_visible(false);
+        imp.keypad_buttons.set_visible(false);
         if let Ok(mut path) = File::open(settings_path()) {
             let mut contents = String::new();
             path.read_to_string(&mut contents)
@@ -87,14 +89,7 @@ impl Window {
                     .expect("Failed to get width as integer"),
             )
             .expect("Failed to convert width to i32");
-            let window_height = i32::try_from(
-                window_settings
-                    .get("height")
-                    .expect("Failed to get height value")
-                    .as_integer()
-                    .expect("Failed to get height as integer"),
-            )
-            .expect("Failed to convert height to i32");
+            let window_height = 76;
             let is_maximized = window_settings
                 .get("is_maximized")
                 .expect("Failed to get maximized value")

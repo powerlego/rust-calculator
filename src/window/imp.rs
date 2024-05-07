@@ -253,8 +253,7 @@ impl WindowImpl for Window {
 
         // Window Settings
         let mut window_settings = table();
-        let (w, h) = self.obj().default_size();
-        window_settings["height"] = value(i64::try_from(h).expect("Cannot convert height to i64"));
+        let (w, _h) = self.obj().default_size();
         window_settings["width"] = value(i64::try_from(w).expect("Cannot convert width to i64"));
         window_settings["is_maximized"] = value(self.obj().is_maximized());
 
