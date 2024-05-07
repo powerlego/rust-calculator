@@ -4,15 +4,16 @@ use std::cell::{Cell, RefCell};
 use std::fs::File;
 use std::io::Write;
 
+// use std::sync::OnceLock;
 use adw::subclass::prelude::*;
 use glib::subclass::InitializingObject;
-use gtk::glib::types::StaticTypeExt;
+use glib::SignalHandlerId;
 use gtk::prelude::*;
-use gtk::{gio, glib, Button, CompositeTemplate, Expander, ListBox, Notebook,Box,Text};
+use gtk::{gio, glib, Box, Button, CompositeTemplate, Expander, ListBox, Notebook, Text};
 use toml_edit::{table, value, DocumentMut};
 
-use crate::skeleton::Skeleton;
 use crate::basic_numpad::BasicNumpad;
+use crate::skeleton::Skeleton;
 use crate::utils::settings_path;
 
 /// The `Window` widget.
@@ -24,23 +25,24 @@ use crate::utils::settings_path;
 #[template(resource = "/com/nc/calculator/window.ui")]
 pub struct Window {
     #[template_child]
-    pub mem_hist_list:     TemplateChild<ListBox>,
+    pub mem_hist_list:                TemplateChild<ListBox>,
     #[template_child]
-    pub tabs:              TemplateChild<Notebook>,
+    pub tabs:                         TemplateChild<Notebook>,
     #[template_child]
-    pub expander_keypad:   TemplateChild<Expander>,
+    pub expander_keypad:              TemplateChild<Expander>,
     #[template_child]
-    pub expander_history:  TemplateChild<Expander>,
+    pub expander_history:             TemplateChild<Expander>,
     #[template_child]
-    pub expander_convert:  TemplateChild<Expander>,
+    pub expander_convert:             TemplateChild<Expander>,
     #[template_child]
-    pub keypad_buttons:    TemplateChild<Box>,
+    pub keypad_buttons:               TemplateChild<Box>,
     #[template_child]
-    pub keypad_lock:       TemplateChild<Button>,
+    pub keypad_lock:                  TemplateChild<Button>,
     #[template_child]
-    pub input_display:     TemplateChild<Text>,
-    pub persistent_keypad: Cell<bool>,
-    pub history:          RefCell<Option<gio::ListStore>>,
+    pub input_display:                TemplateChild<Text>,
+    pub input_display_changed_signal: RefCell<Option<SignalHandlerId>>,
+    pub persistent_keypad:            Cell<bool>,
+    pub history:                      RefCell<Option<gio::ListStore>>,
 }
 
 #[glib::object_subclass]

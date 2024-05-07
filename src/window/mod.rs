@@ -207,16 +207,31 @@ impl Window {
                 window.imp().update_persistent_keypad(false);
             }));
 
-        self.imp().input_display.connect_paste_clipboard(|input_display| {
-            input_display.select_region(0, -1);
-        });
-
-        self.imp().input_display.connect_changed(|disp| {
-            let binding = disp.text();
-            let text = binding.trim();
-            if text.is_empty() {}
-            println!("Text: {}", text);
-        });
+        self.imp().input_display.connect_paste_clipboard(clone!(@weak self as window => move |input_display| {
+            input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+            input_display.set_text("");
+            input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+        }));
+        self.imp()
+            .input_display_changed_signal
+            .replace(Some(self.imp().input_display.connect_changed(
+                clone!(@weak self as window => move |disp| {
+                    let binding = disp.text();
+                    let text = binding.trim();
+                    println!("Text: {}", text);
+                    if text.is_empty(){
+                        window.imp().input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                        disp.set_text("0");
+                        window.imp().input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                    }
+                    else {
+                        let text = display_thousands_separator(text);
+                        window.imp().input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                        disp.set_text(&text);
+                        window.imp().input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                    }
+                }),
+            )));
     }
 
     /// Creates the rows for the history list.
