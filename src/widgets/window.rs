@@ -494,6 +494,26 @@ impl Window {
         self.imp().input_display.insert_text(text, &mut pos);
     }
 
+    fn set_display_text(&self, text: &str) {
+        self.imp().input_display.block_signal(
+            &self
+                .imp()
+                .input_display_changed_signal
+                .borrow()
+                .as_ref()
+                .expect("Could not get input_display_changed_signal"),
+        );
+        self.imp().input_display.set_text(text);
+        self.imp().input_display.unblock_signal(
+            &self
+                .imp()
+                .input_display_changed_signal
+                .borrow()
+                .as_ref()
+                .expect("Could not get input_display_changed_signal"),
+        );
+    }
+
     fn setup_event_controllers(&self) {
         let controller = EventControllerKey::builder()
             .name("keypad-controller")
@@ -501,7 +521,7 @@ impl Window {
             .propagation_limit(gtk::PropagationLimit::SameNative)
             .build();
         controller.connect_key_pressed(
-            clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, state| {
+            clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, _state| {
                 match key {
                     Key::BackSpace => {
                         window.imp().basic_numpad.imp().button_backspace.set_state_flags(gtk::StateFlags::ACTIVE, false);
@@ -544,20 +564,37 @@ impl Window {
                         window.imp().basic_numpad.imp().button_seven.set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("7");
                     }
-                    
-                    Key::_8 => {
-                        if !state.intersects(gdk::ModifierType::SHIFT_MASK) {
-                            window.imp().basic_numpad.imp().button_eight.set_state_flags(gtk::StateFlags::ACTIVE, false);
-                            window.insert_display_text("8");
-                        }
-                    }
-                    Key::KP_8 => {
+                    Key::_8 | Key::KP_8 => {
                         window.imp().basic_numpad.imp().button_eight.set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("8");
                     }
                     Key::_9 | Key::KP_9 => {
                         window.imp().basic_numpad.imp().button_nine.set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("9");
+                    }
+                    Key::Delete | Key::KP_Delete => {
+                        window.imp().basic_numpad.imp().button_clear_entry.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.set_display_text("0");
+                        window.imp().input_display.set_max_length(21);
+                    }
+                    Key::period | Key::KP_Decimal => {
+                        window.imp().basic_numpad.imp().button_decimal.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text(".");
+                    }
+                    Key::exclam => {
+                        window.imp().basic_numpad.imp().button_plus_minus.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        let text = window.imp().input_display.text();
+                        if text != "0" {
+                            if text.starts_with('-') {
+                                window.imp().input_display.delete_text(0, 1);
+                                window.imp().input_display.set_max_length(21);
+                            }
+                            else {
+                                let mut pos =0;
+                                window.imp().input_display.set_max_length(22);
+                                window.imp().input_display.insert_text("-", &mut pos);
+                            }
+                        }
                     }
                     _ => {}
                 }
@@ -601,7 +638,18 @@ impl Window {
                     Key::_9 | Key::KP_9 => {
                         window.imp().basic_numpad.imp().button_nine.unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
-                    _ => {}
+                    Key::Delete | Key::KP_Delete => {
+                        window.imp().basic_numpad.imp().button_clear_entry.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::period | Key::KP_Decimal => {
+                        window.imp().basic_numpad.imp().button_decimal.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::exclam => {
+                        window.imp().basic_numpad.imp().button_plus_minus.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    _ => {
+                        println!("Key released: {:?}, Key Name: {:?}", key,key.name());
+                    }
                 }
             }),
         );
@@ -632,6 +680,7 @@ impl Window {
                     if text.is_empty(){
                         window.imp().input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
                         disp.set_text("0");
+                        window.imp().input_display.set_max_length(21);
                         window.imp().input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
                     }
                     else {
@@ -679,6 +728,27 @@ impl Window {
                             .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
                     }
                     // window.imp().basic_numpad.imp().button_backspace.emit_activate();
+                }
+                else if parameter == "decimal" {
+                    window.insert_display_text(".");
+                }
+                else if parameter == "plus_minus" {
+                    let text = window.imp().input_display.text();
+                    if text != "0" {
+                        if text.starts_with('-') {
+                            window.imp().input_display.delete_text(0, 1);
+                            window.imp().input_display.set_max_length(21);
+                        }
+                        else {
+                            let mut pos = 0;
+                            window.imp().input_display.set_max_length(22);
+                            window.imp().input_display.insert_text("-", &mut pos);
+                        }
+                    }
+                }
+                else if parameter == "clear-entry" {
+                    window.set_display_text("0");
+                    window.imp().input_display.set_max_length(21);
                 }
                 else {
                     println!("Op insert: {}", parameter);
