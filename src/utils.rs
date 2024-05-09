@@ -21,9 +21,13 @@ pub fn display_thousands_separator(number: &str) -> String {
     let mut result = String::new();
     let mut count = 0;
     let split = number.split('.').collect::<Vec<&str>>();
-    let num = split[0];
+    let mut num = split[0];
     if split.len() > 1 {
         result.push_str(&format!("{}.", split[1].chars().rev().collect::<String>()));
+    }
+    let is_negative = num.starts_with('-');
+    if is_negative {
+        num = &num[1..];
     }
     for c in num.chars().rev() {
         if count == 3 {
@@ -33,5 +37,6 @@ pub fn display_thousands_separator(number: &str) -> String {
         result.push(c);
         count += 1;
     }
+    result.push_str(&if is_negative { "-" } else { "" });
     result.chars().rev().collect()
 }
