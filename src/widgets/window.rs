@@ -57,6 +57,8 @@ mod imp {
         pub keypad_lock:                  TemplateChild<Button>,
         #[template_child]
         pub input_display:                TemplateChild<Text>,
+        #[template_child]
+        pub basic_numpad:                 TemplateChild<BasicNumpad>,
         pub input_display_changed_signal: RefCell<Option<SignalHandlerId>>,
         pub persistent_keypad:            Cell<bool>,
         pub history:                      RefCell<Option<gio::ListStore>>,
@@ -502,44 +504,108 @@ impl Window {
             clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, state| {
                 match key {
                     Key::BackSpace => {
+                        window.imp().basic_numpad.imp().button_backspace.set_state_flags(gtk::StateFlags::ACTIVE, false);
                         if window.imp().input_display.text().as_str() != "0" {
                             window
-                            .imp()
-                            .input_display
-                            .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
+                                .imp()
+                                .input_display
+                                .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
                         }
                     }
+                    Key::_0 | Key::KP_0=> {
+                        window.imp().basic_numpad.imp().button_zero.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("0");
+                    }
+                    Key::_1 | Key::KP_1 => {
+                        window.imp().basic_numpad.imp().button_one.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("1");
+                    }
+                    Key::_2 | Key::KP_2 => {
+                        window.imp().basic_numpad.imp().button_two.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("2");
+                    }
+                    Key::_3 | Key::KP_3 => {
+                        window.imp().basic_numpad.imp().button_three.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("3");
+                    }
+                    Key::_4 | Key::KP_4 => {
+                        window.imp().basic_numpad.imp().button_four.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("4");
+                    }
+                    Key::_5 | Key::KP_5 => {
+                        window.imp().basic_numpad.imp().button_five.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("5");
+                    }
+                    Key::_6 | Key::KP_6 => {
+                        window.imp().basic_numpad.imp().button_six.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("6");
+                    }
+                    Key::_7 | Key::KP_7 => {
+                        window.imp().basic_numpad.imp().button_seven.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("7");
+                    }
+                    
                     Key::_8 => {
                         if !state.intersects(gdk::ModifierType::SHIFT_MASK) {
+                            window.imp().basic_numpad.imp().button_eight.set_state_flags(gtk::StateFlags::ACTIVE, false);
                             window.insert_display_text("8");
                         }
                     }
-                    Key::_0
-                    | Key::_1
-                    | Key::_2
-                    | Key::_3
-                    | Key::_4
-                    | Key::_5
-                    | Key::_6
-                    | Key::_7
-                    | Key::_9
-                    | Key::KP_0
-                    | Key::KP_1
-                    | Key::KP_2
-                    | Key::KP_3
-                    | Key::KP_4
-                    | Key::KP_5
-                    | Key::KP_6
-                    | Key::KP_7
-                    | Key::KP_8
-                    | Key::KP_9 => {
-                        window.insert_display_text(&key.to_unicode().expect("Could not get unicode value").to_string().as_str());
+                    Key::KP_8 => {
+                        window.imp().basic_numpad.imp().button_eight.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("8");
+                    }
+                    Key::_9 | Key::KP_9 => {
+                        window.imp().basic_numpad.imp().button_nine.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.insert_display_text("9");
                     }
                     _ => {}
                 }
                 glib::Propagation::Proceed
             })
         );
+
+        controller.connect_key_released(
+            clone!(@weak self as window => move |_controller, key, _keyval, _state| {
+                match key {
+                    Key::BackSpace => {
+                        window.imp().basic_numpad.imp().button_backspace.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_0 | Key::KP_0 => {
+                        window.imp().basic_numpad.imp().button_zero.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_1 | Key::KP_1 => {
+                        window.imp().basic_numpad.imp().button_one.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_2 | Key::KP_2 => {
+                        window.imp().basic_numpad.imp().button_two.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_3 | Key::KP_3 => {
+                        window.imp().basic_numpad.imp().button_three.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_4 | Key::KP_4 => {
+                        window.imp().basic_numpad.imp().button_four.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_5 | Key::KP_5 => {
+                        window.imp().basic_numpad.imp().button_five.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_6 | Key::KP_6 => {
+                        window.imp().basic_numpad.imp().button_six.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_7 | Key::KP_7 => {
+                        window.imp().basic_numpad.imp().button_seven.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_8 | Key::KP_8 => {
+                        window.imp().basic_numpad.imp().button_eight.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::_9 | Key::KP_9 => {
+                        window.imp().basic_numpad.imp().button_nine.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    _ => {}
+                }
+            }),
+        );
+
         self.add_controller(controller);
     }
 
@@ -588,24 +654,35 @@ impl Window {
     fn setup_actions(&self) {
         let action_num_insert = ActionEntry::builder("num-insert")
             .parameter_type(Some(&i32::static_variant_type()))
-            .activate(move |_: &Self, _action, parameter| {
+            .activate(move |window: &Self, _action, parameter| {
                 let parameter = parameter
                     .expect("Could not get parameter.")
                     .get::<i32>()
                     .expect("The variant needs to be of type `i32`.");
 
-                println!("Num insert: {}", parameter);
+                window.insert_display_text(parameter.to_string().as_str());
             })
             .build();
         let action_op_insert = ActionEntry::builder("op-insert")
             .parameter_type(Some(&String::static_variant_type()))
-            .activate(move |_: &Self, _action, parameter| {
+            .activate(move |window: &Self, _action, parameter| {
                 let parameter = parameter
                     .expect("Could not get parameter.")
                     .get::<String>()
                     .expect("The variant needs to be of type `String`.");
 
-                println!("Op insert: {}", parameter);
+                if parameter == "backspace" {
+                    if window.imp().input_display.text().as_str() != "0" {
+                        window
+                            .imp()
+                            .input_display
+                            .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
+                    }
+                    // window.imp().basic_numpad.imp().button_backspace.emit_activate();
+                }
+                else {
+                    println!("Op insert: {}", parameter);
+                }
             })
             .build();
 
