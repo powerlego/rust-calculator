@@ -758,6 +758,10 @@ impl Window {
                     window.set_display_text("0");
                     window.imp().input_display.set_max_length(21);
                 }
+                else if parameter == "clear" {
+                    // TODO: Clear calculation buffer
+                    window.set_display_text("0");
+                }
                 else {
                     println!("Op insert: {}", parameter);
                 }
