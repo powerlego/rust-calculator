@@ -9,3 +9,9 @@ headerbar .title {
 .keypad-lock {
   padding: 0;
 }
+
+.input-display {
+  font-size: 64px;
+  font-weight: 600;
+  padding: 6px 18px;
+}

@@ -1,12 +1,10 @@
-mod basic_numpad;
 mod integer_object;
-mod skeleton;
 mod utils;
-mod window;
+mod widgets;
 use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
-use window::Window;
+use widgets::Window;
 const APP_ID: &str = "com.nc.Calculator";
 
 fn main() -> glib::ExitCode {
