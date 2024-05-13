@@ -596,6 +596,11 @@ impl Window {
                             }
                         }
                     }
+                    Key::Escape => {
+                        // TODO: Clear calculation buffer
+                        window.imp().basic_numpad.imp().button_clear.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window.set_display_text("0");
+                    }
                     _ => {}
                 }
                 glib::Propagation::Proceed
@@ -646,6 +651,9 @@ impl Window {
                     }
                     Key::exclam => {
                         window.imp().basic_numpad.imp().button_plus_minus.unset_state_flags(gtk::StateFlags::ACTIVE);
+                    }
+                    Key::Escape => {
+                        window.imp().basic_numpad.imp().button_clear.unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     _ => {
                         println!("Key released: {:?}, Key Name: {:?}", key,key.name());
