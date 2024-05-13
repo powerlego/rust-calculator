@@ -7,7 +7,9 @@ use crate::APP_ID;
 /// Creates the directory to store the settings file and returns the path to the settings file.
 /// If the directory already exists, it will just return the path to the settings file.
 /// If the directory does not exist, it will create the directory and then return the path to the settings file.
+/// 
 /// # Returns
+/// 
 /// The path to the settings file.
 pub fn settings_path() -> PathBuf {
     let mut path = glib::user_config_dir();
@@ -17,6 +19,15 @@ pub fn settings_path() -> PathBuf {
     path
 }
 
+/// Displays a number with a thousands separator.
+/// 
+/// # Arguments
+/// 
+/// * `number` - The number to display with a thousands separator.
+/// 
+/// # Returns
+/// 
+/// The number formatted with a thousands separator.
 pub fn display_thousands_separator(number: &str) -> String {
     let mut result = String::new();
     let mut count = 0;
