@@ -1,4 +1,6 @@
-//! This module contains the implementation of the [`BasicNumpad`] widget. It provides a basic numpad for the calculator, allowing the user to input numbers and perform basic operations. It is a subclass of [`gtk::Grid`] allowing for easy layout of the buttons.
+//! This module contains the implementation of the [`BasicNumpad`] widget. It provides a basic numpad for the
+//! calculator, allowing the user to input numbers and perform basic operations. It is a subclass of [`gtk::Grid`]
+//! allowing for easy layout of the buttons.
 
 use glib::Object;
 use gtk::glib;
@@ -10,7 +12,8 @@ mod imp {
     use glib::subclass::InitializingObject;
     use gtk::{glib, Button, CompositeTemplate, Grid};
 
-    /// The `BasicNumpad` widget. It provides a basic numpad for the calculator, allowing the user to input numbers and perform basic operations. It is a subclass of [`gtk::Grid`] allowing for easy layout of the buttons.
+    /// The `BasicNumpad` widget. It provides a basic numpad for the calculator, allowing the user to input numbers and
+    /// perform basic operations. It is a subclass of [`gtk::Grid`] allowing for easy layout of the buttons.
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/com/nc/calculator/basic_numpad.ui")]
     pub struct BasicNumpad {
@@ -93,7 +96,6 @@ mod imp {
 }
 
 glib::wrapper! {
-
     /// A [`BasicNumpad`] widget. It provides a basic numpad for the calculator, allowing the user to input numbers and perform basic operations. It is a subclass of [`gtk::Grid`] allowing for easy layout of the buttons.
     pub struct BasicNumpad(ObjectSubclass<imp::BasicNumpad>)
         @extends gtk::Grid, gtk::Widget,
@@ -101,7 +103,6 @@ glib::wrapper! {
 }
 
 impl BasicNumpad {
-
     /// Creates a new [`BasicNumpad`] widget.
     pub fn new() -> Self {
         Object::builder().build()
@@ -109,7 +110,6 @@ impl BasicNumpad {
 }
 
 impl Default for BasicNumpad {
-
     /// The default implementation of the [`BasicNumpad`] widget. It creates a new [`BasicNumpad`] widget.
     fn default() -> Self {
         Self::new()
