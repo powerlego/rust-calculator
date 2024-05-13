@@ -17,12 +17,12 @@ use crate::utils::{display_thousands_separator, settings_path};
 use crate::widgets::Skeleton;
 
 mod imp {
+    //! The private implementation details of the [`Window`] object.
 
     use std::cell::{Cell, RefCell};
     use std::fs::File;
     use std::io::Write;
 
-    // use std::sync::OnceLock;
     use adw::subclass::prelude::*;
     use glib::subclass::InitializingObject;
     use glib::SignalHandlerId;
@@ -33,8 +33,10 @@ mod imp {
     use crate::utils::settings_path;
     use crate::widgets::{BasicNumpad, Skeleton};
 
-    /// The `Window` widget.
+    /// The `Window` widget. It is the main window of the application.
+    /// 
     /// # Actions
+    /// 
     /// The `Window` implements the following actions:
     /// * `num-insert` - Inserts a number into the display.
     /// * `op-insert` - Inserts an operator into the display.
@@ -87,6 +89,16 @@ mod imp {
 
     #[gtk::template_callbacks]
     impl Window {
+
+        /// Callback for the `on_expander_keypad_expanded` signal.
+        /// If the keypad expander is expanded, it will show the keypad buttons and hide the tabs if persistent keypad
+        /// is `false`. If the keypad expander is collapsed, it will hide the keypad buttons. If the keypad expander is
+        /// expanded and the history expander or the convert expander was expanded, it will collapse the history or the
+        /// convert expander respectively.
+        /// 
+        /// # Arguments
+        /// 
+        /// * `_p` - The parameter spec. (Unused)
         #[template_callback]
         fn on_expander_keypad_expanded(&self, _p: glib::ParamSpec) {
             if self.expander_keypad.is_expanded() {
@@ -105,6 +117,16 @@ mod imp {
             }
         }
 
+        /// Callback for the `on_expander_history_expanded` signal.
+        /// 
+        /// If the history expander is expanded, it will show the tabs and hide the keypad buttons if persistent keypad
+        /// is `false`. If the history expander is collapsed and the convert expander is not expanded, it will
+        /// hide the tabs. If the history expander is expanded and the convert expander was expanded, it will
+        /// collapse the convert expander.
+        /// 
+        /// # Arguments
+        /// 
+        /// * `_p` - The parameter spec. (Unused)
         #[template_callback]
         fn on_expander_history_expanded(&self, _p: glib::ParamSpec) {
             if self.expander_history.is_expanded() {
@@ -122,6 +144,15 @@ mod imp {
             }
         }
 
+        /// Callback for the `on_expander_convert_expanded` signal.
+        /// If the convert expander is expanded, it will show the tabs and hide the keypad buttons if persistent keypad
+        /// is `false`. If the convert expander is collapsed and the history expander is not expanded, it will
+        /// hide the tabs. If the convert expander is expanded and the history expander was expanded, it will
+        /// collapse the history expander.
+        /// 
+        /// # Arguments
+        /// 
+        /// * `_p` - The parameter spec. (Unused)
         #[template_callback]
         fn on_expander_convert_expanded(&self, _p: glib::ParamSpec) {
             if self.expander_convert.is_expanded() {
@@ -139,6 +170,16 @@ mod imp {
             }
         }
 
+        /// Shows or hides the keypad buttons based on the value of `do_show`.
+        /// If `do_show` is `true`, it will show the keypad buttons. If `do_show` is `false`, it will hide the keypad
+        /// buttons. If the keypad buttons are already visible and `do_show` is `true`, it will do nothing.
+        /// If persistent keypad is `true` and the keypad buttons are not visible, it will show the keypad buttons and
+        /// keep the tabs visible. If persistent keypad is `false` and the tabs are visible, it will hide the
+        /// tabs.
+        ///
+        /// # Arguments
+        ///
+        /// * `do_show` - A boolean indicating whether to show or hide the keypad buttons.
         pub fn show_keypad_widget(&self, do_show: bool) {
             if do_show == self.keypad_buttons.is_visible() {
                 return;
@@ -180,6 +221,14 @@ mod imp {
                 .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
         }
 
+        /// Shows or hides the tabs based on the value of `do_show`.
+        /// If `do_show` is `true`, it will show the tabs. If `do_show` is `false`, it will hide the tabs.
+        /// If the tabs are already visible and `do_show` is `true`, it will do nothing.
+        /// If persistent keypad is `false` and the keypad buttons are visible, it will hide the keypad buttons.
+        ///
+        /// # Arguments
+        ///
+        /// * `do_show` - A boolean indicating whether to show or hide the tabs.
         pub fn show_tabs(&self, do_show: bool) {
             if do_show == self.tabs.is_visible() {
                 return;
@@ -306,7 +355,9 @@ mod imp {
 
 glib::wrapper! {
     /// The Main [`Window`] of the application. It is a subclass of [`adw::ApplicationWindow`].
+    /// 
     /// # Actions
+    /// 
     /// The [`Window`] implements the following actions:
     /// * `num-insert` - Inserts a number into the display.
     /// * `op-insert` - Inserts an operator into the display.
