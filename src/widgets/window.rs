@@ -213,6 +213,13 @@ mod imp {
                 .set_vexpand(!persistent_keypad || !self.tabs.is_visible());
         }
 
+        /// Updates the persistent keypad state. If `show_hide_buttons` is `true`, it will show or hide the keypad
+        /// buttons. If the keypad is persistent, it will always show the keypad buttons.
+        /// If the keypad is not persistent, it will show the keypad buttons if the tabs are not visible.
+        ///
+        /// # Arguments
+        ///
+        /// * `show_hide_buttons` - A boolean indicating whether to show or hide the keypad buttons.
         pub fn update_persistent_keypad(&self, mut show_hide_buttons: bool) {
             let persistent_keypad = self.persistent_keypad.get();
             if !persistent_keypad && self.tabs.is_visible() {
@@ -321,6 +328,15 @@ impl Window {
     ///
     /// # Arguments
     /// * `self` - The [`Window`] object.
+    ///
+    /// # Panics
+    ///
+    /// * Panics if the settings file cannot be read or parsed.
+    /// * Panics if the settings table cannot be retrieved.
+    /// * Panics if the settings values cannot be retrieved.
+    /// * Panics if the window settings table cannot be retrieved.
+    /// * Panics if the width value cannot be retrieved.
+    /// * Panics if the width value cannot be converted to an `i32`.
     fn load_settings(&self) {
         let imp = self.imp();
         imp.tabs.set_visible(false);
@@ -441,6 +457,14 @@ impl Window {
     }
 
     /// The [`gio::ListStore`] representing the calculation history.
+    ///
+    /// # Returns
+    ///
+    /// The calculation history list store.
+    ///
+    /// # Panics
+    ///
+    /// * Panics if the current mem_hist is `None`.
     fn history(&self) -> gio::ListStore {
         self.imp()
             .history
@@ -465,11 +489,24 @@ impl Window {
     }
 
     /// Creates a new row widget for the history list.
+    ///
+    /// # Returns
+    ///
+    /// The new row widget.
     fn create_integer_row(&self) -> Skeleton {
         let row = Skeleton::new();
         row
     }
 
+    /// Inserts the given text into the input display.
+    ///
+    /// # Arguments
+    ///
+    /// * `text` - The text to be inserted.
+    ///
+    /// # Panics
+    ///
+    /// * Panics if the input display changed signal cannot be retrieved.
     fn insert_display_text(&self, text: &str) {
         if self.imp().input_display.text().as_str() == "0" {
             self.imp().input_display.block_signal(
@@ -494,6 +531,11 @@ impl Window {
         self.imp().input_display.insert_text(text, &mut pos);
     }
 
+    /// Sets the text of the input display.
+    ///
+    /// # Arguments
+    ///
+    /// * `text` - The text to set the input display to.
     fn set_display_text(&self, text: &str) {
         self.imp().input_display.block_signal(
             &self
@@ -514,6 +556,9 @@ impl Window {
         );
     }
 
+    /// Sets up the event controllers for the [`Window`].
+    /// The event controllers are used to handle key presses and releases.
+    /// The key presses and releases are used to interact with the calculator.
     fn setup_event_controllers(&self) {
         let controller = EventControllerKey::builder()
             .name("keypad-controller")
@@ -900,6 +945,14 @@ impl Window {
     }
 
     /// Sets up the actions for the [`Window`].
+    /// The actions are used to interact with the calculator.
+    ///
+    /// # Panics
+    ///
+    /// * Panics if the action `num-insert` parameter cannot be retrieved.
+    /// * Panics if the action `num-insert` parameter type is not `i32`.
+    /// * Panics if the action `op-insert` parameter cannot be retrieved.
+    /// * Panics if the action `op-insert` parameter type is not `String`.
     fn setup_actions(&self) {
         let action_num_insert = ActionEntry::builder("num-insert")
             .parameter_type(Some(&i32::static_variant_type()))
