@@ -981,43 +981,43 @@ impl Window {
                     .expect("Could not get parameter.")
                     .get::<String>()
                     .expect("The variant needs to be of type `String`.");
-
-                if parameter == "backspace" {
-                    if window.imp().input_display.text().as_str() != "0" {
-                        window
-                            .imp()
-                            .input_display
-                            .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
-                    }
-                    // window.imp().basic_numpad.imp().button_backspace.emit_activate();
-                }
-                else if parameter == "decimal" {
-                    window.insert_display_text(".");
-                }
-                else if parameter == "plus_minus" {
-                    let text = window.imp().input_display.text();
-                    if text != "0" {
-                        if text.starts_with('-') {
-                            window.imp().input_display.delete_text(0, 1);
-                            window.imp().input_display.set_max_length(21);
-                        }
-                        else {
-                            let mut pos = 0;
-                            window.imp().input_display.set_max_length(22);
-                            window.imp().input_display.insert_text("-", &mut pos);
+                match parameter.as_str() {
+                    "backspace" => {
+                        if window.imp().input_display.text().as_str() != "0" {
+                            window
+                                .imp()
+                                .input_display
+                                .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
                         }
                     }
-                }
-                else if parameter == "clear-entry" {
-                    window.set_display_text("0");
-                    window.imp().input_display.set_max_length(21);
-                }
-                else if parameter == "clear" {
-                    // TODO: Clear calculation buffer
-                    window.set_display_text("0");
-                }
-                else {
-                    println!("Op insert: {}", parameter);
+                    "decimal" => {
+                        window.insert_display_text(".");
+                    }
+                    "plus_minus" => {
+                        let text = window.imp().input_display.text();
+                        if text != "0" {
+                            if text.starts_with('-') {
+                                window.imp().input_display.delete_text(0, 1);
+                                window.imp().input_display.set_max_length(21);
+                            }
+                            else {
+                                let mut pos = 0;
+                                window.imp().input_display.set_max_length(22);
+                                window.imp().input_display.insert_text("-", &mut pos);
+                            }
+                        }
+                    }
+                    "clear-entry" => {
+                        window.set_display_text("0");
+                        window.imp().input_display.set_max_length(21);
+                    }
+                    "clear" => {
+                        // TODO: Clear calculation buffer
+                        window.set_display_text("0");
+                    }
+                    _ => {
+                        println!("Op insert: {}", parameter);
+                    }
                 }
             })
             .build();
