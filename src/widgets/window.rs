@@ -930,44 +930,18 @@ impl Window {
                     let binding = disp.text().replace(",", "");
                     let text = binding.trim();
                     if text.is_empty() {
-                        window.imp().input_display.block_signal(
-                            &window
-                                .imp()
-                                .input_display_changed_signal
-                                .borrow()
-                                .as_ref()
-                                .expect("Could not get input_display_changed_signal"),
-                        );
-                        disp.set_text("0");
-                        window.imp().input_display.set_max_length(21);
-                        window.imp().input_display.unblock_signal(
-                            &window
-                                .imp()
-                                .input_display_changed_signal
-                                .borrow()
-                                .as_ref()
-                                .expect("Could not get input_display_changed_signal"),
-                        );
+                        disp.set_max_length(21);
+                        window.set_display_text("0");
                     }
                     else {
                         let text = display_thousands_separator(text);
-                        window.imp().input_display.block_signal(
-                            &window
-                                .imp()
-                                .input_display_changed_signal
-                                .borrow()
-                                .as_ref()
-                                .expect("Could not get input_display_changed_signal"),
-                        );
-                        disp.set_text(&text);
-                        window.imp().input_display.unblock_signal(
-                            &window
-                                .imp()
-                                .input_display_changed_signal
-                                .borrow()
-                                .as_ref()
-                                .expect("Could not get input_display_changed_signal"),
-                        );
+                        if text.starts_with("-") {
+                            disp.set_max_length(22);
+                        }
+                        else {
+                            disp.set_max_length(21);
+                        }
+                        window.set_display_text(text.as_str());
                     }
                 }),
             )));
