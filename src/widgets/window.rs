@@ -524,7 +524,12 @@ impl Window {
             clone!(@weak self as window => @default-return glib::Propagation::Stop, move |_controller, key, _keyval, _state| {
                 match key {
                     Key::BackSpace => {
-                        window.imp().basic_numpad.imp().button_backspace.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_backspace
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         if window.imp().input_display.text().as_str() != "0" {
                             window
                                 .imp()
@@ -532,57 +537,122 @@ impl Window {
                                 .delete_text((window.imp().input_display.text().len() - 1) as i32, -1);
                         }
                     }
-                    Key::_0 | Key::KP_0=> {
-                        window.imp().basic_numpad.imp().button_zero.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                    Key::_0 | Key::KP_0 => {
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_zero
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("0");
                     }
                     Key::_1 | Key::KP_1 => {
-                        window.imp().basic_numpad.imp().button_one.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_one
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("1");
                     }
                     Key::_2 | Key::KP_2 => {
-                        window.imp().basic_numpad.imp().button_two.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_two
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("2");
                     }
                     Key::_3 | Key::KP_3 => {
-                        window.imp().basic_numpad.imp().button_three.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_three
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("3");
                     }
                     Key::_4 | Key::KP_4 => {
-                        window.imp().basic_numpad.imp().button_four.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_four
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("4");
                     }
                     Key::_5 | Key::KP_5 => {
-                        window.imp().basic_numpad.imp().button_five.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_five
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("5");
                     }
                     Key::_6 | Key::KP_6 => {
-                        window.imp().basic_numpad.imp().button_six.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_six
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("6");
                     }
                     Key::_7 | Key::KP_7 => {
-                        window.imp().basic_numpad.imp().button_seven.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_seven
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("7");
                     }
                     Key::_8 | Key::KP_8 => {
-                        window.imp().basic_numpad.imp().button_eight.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_eight
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("8");
                     }
                     Key::_9 | Key::KP_9 => {
-                        window.imp().basic_numpad.imp().button_nine.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_nine
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text("9");
                     }
                     Key::Delete | Key::KP_Delete => {
-                        window.imp().basic_numpad.imp().button_clear_entry.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_clear_entry
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.set_display_text("0");
                         window.imp().input_display.set_max_length(21);
                     }
                     Key::period | Key::KP_Decimal => {
-                        window.imp().basic_numpad.imp().button_decimal.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_decimal
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.insert_display_text(".");
                     }
                     Key::exclam => {
-                        window.imp().basic_numpad.imp().button_plus_minus.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_plus_minus
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         let text = window.imp().input_display.text();
                         if text != "0" {
                             if text.starts_with('-') {
@@ -590,7 +660,7 @@ impl Window {
                                 window.imp().input_display.set_max_length(21);
                             }
                             else {
-                                let mut pos =0;
+                                let mut pos = 0;
                                 window.imp().input_display.set_max_length(22);
                                 window.imp().input_display.insert_text("-", &mut pos);
                             }
@@ -598,7 +668,12 @@ impl Window {
                     }
                     Key::Escape => {
                         // TODO: Clear calculation buffer
-                        window.imp().basic_numpad.imp().button_clear.set_state_flags(gtk::StateFlags::ACTIVE, false);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_clear
+                            .set_state_flags(gtk::StateFlags::ACTIVE, false);
                         window.set_display_text("0");
                     }
                     _ => {}
@@ -608,57 +683,130 @@ impl Window {
         );
 
         controller.connect_key_released(
-            clone!(@weak self as window => move |_controller, key, _keyval, _state| {
-                match key {
+            clone!(@weak self as window => move |_controller, key, _keyval, _state| match key {
                     Key::BackSpace => {
-                        window.imp().basic_numpad.imp().button_backspace.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_backspace
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_0 | Key::KP_0 => {
-                        window.imp().basic_numpad.imp().button_zero.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_zero
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_1 | Key::KP_1 => {
-                        window.imp().basic_numpad.imp().button_one.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_one
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_2 | Key::KP_2 => {
-                        window.imp().basic_numpad.imp().button_two.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_two
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_3 | Key::KP_3 => {
-                        window.imp().basic_numpad.imp().button_three.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_three
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_4 | Key::KP_4 => {
-                        window.imp().basic_numpad.imp().button_four.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_four
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_5 | Key::KP_5 => {
-                        window.imp().basic_numpad.imp().button_five.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_five
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_6 | Key::KP_6 => {
-                        window.imp().basic_numpad.imp().button_six.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_six
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_7 | Key::KP_7 => {
-                        window.imp().basic_numpad.imp().button_seven.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_seven
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_8 | Key::KP_8 => {
-                        window.imp().basic_numpad.imp().button_eight.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_eight
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::_9 | Key::KP_9 => {
-                        window.imp().basic_numpad.imp().button_nine.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_nine
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::Delete | Key::KP_Delete => {
-                        window.imp().basic_numpad.imp().button_clear_entry.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_clear_entry
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::period | Key::KP_Decimal => {
-                        window.imp().basic_numpad.imp().button_decimal.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_decimal
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::exclam => {
-                        window.imp().basic_numpad.imp().button_plus_minus.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_plus_minus
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     Key::Escape => {
-                        window.imp().basic_numpad.imp().button_clear.unset_state_flags(gtk::StateFlags::ACTIVE);
+                        window
+                            .imp()
+                            .basic_numpad
+                            .imp()
+                            .button_clear
+                            .unset_state_flags(gtk::StateFlags::ACTIVE);
                     }
                     _ => {
-                        println!("Key released: {:?}, Key Name: {:?}", key,key.name());
+                        println!("Key released: {:?}, Key Name: {:?}", key, key.name());
                     }
-                }
             }),
         );
 
@@ -674,28 +822,72 @@ impl Window {
                 window.imp().update_persistent_keypad(false);
             }));
 
-        self.imp().input_display.connect_paste_clipboard(clone!(@weak self as window => move |input_display| {
-            input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
-            input_display.set_text("");
-            input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
-        }));
+        self.imp()
+            .input_display
+            .connect_paste_clipboard(clone!(@weak self as window => move |input_display| {
+                input_display.block_signal(
+                    &window
+                        .imp()
+                        .input_display_changed_signal
+                        .borrow()
+                        .as_ref()
+                        .expect("Could not get input_display_changed_signal"),
+                );
+                input_display.set_text("");
+                input_display.unblock_signal(
+                    &window
+                        .imp()
+                        .input_display_changed_signal
+                        .borrow()
+                        .as_ref()
+                        .expect("Could not get input_display_changed_signal"),
+                );
+            }));
         self.imp()
             .input_display_changed_signal
             .replace(Some(self.imp().input_display.connect_changed(
                 clone!(@weak self as window => move |disp| {
                     let binding = disp.text().replace(",", "");
                     let text = binding.trim();
-                    if text.is_empty(){
-                        window.imp().input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                    if text.is_empty() {
+                        window.imp().input_display.block_signal(
+                            &window
+                                .imp()
+                                .input_display_changed_signal
+                                .borrow()
+                                .as_ref()
+                                .expect("Could not get input_display_changed_signal"),
+                        );
                         disp.set_text("0");
                         window.imp().input_display.set_max_length(21);
-                        window.imp().input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                        window.imp().input_display.unblock_signal(
+                            &window
+                                .imp()
+                                .input_display_changed_signal
+                                .borrow()
+                                .as_ref()
+                                .expect("Could not get input_display_changed_signal"),
+                        );
                     }
                     else {
                         let text = display_thousands_separator(text);
-                        window.imp().input_display.block_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                        window.imp().input_display.block_signal(
+                            &window
+                                .imp()
+                                .input_display_changed_signal
+                                .borrow()
+                                .as_ref()
+                                .expect("Could not get input_display_changed_signal"),
+                        );
                         disp.set_text(&text);
-                        window.imp().input_display.unblock_signal(&window.imp().input_display_changed_signal.borrow().as_ref().expect("Could not get input_display_changed_signal"));
+                        window.imp().input_display.unblock_signal(
+                            &window
+                                .imp()
+                                .input_display_changed_signal
+                                .borrow()
+                                .as_ref()
+                                .expect("Could not get input_display_changed_signal"),
+                        );
                     }
                 }),
             )));
