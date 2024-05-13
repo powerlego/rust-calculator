@@ -920,24 +920,8 @@ impl Window {
 
         self.imp()
             .input_display
-            .connect_paste_clipboard(clone!(@weak self as window => move |input_display| {
-                input_display.block_signal(
-                    &window
-                        .imp()
-                        .input_display_changed_signal
-                        .borrow()
-                        .as_ref()
-                        .expect("Could not get input_display_changed_signal"),
-                );
-                input_display.set_text("");
-                input_display.unblock_signal(
-                    &window
-                        .imp()
-                        .input_display_changed_signal
-                        .borrow()
-                        .as_ref()
-                        .expect("Could not get input_display_changed_signal"),
-                );
+            .connect_paste_clipboard(clone!(@weak self as window => move |_input_display| {
+                window.set_display_text("");
             }));
         self.imp()
             .input_display_changed_signal
