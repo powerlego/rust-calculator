@@ -356,7 +356,7 @@ mod imp {
 glib::wrapper! {
     /// The Main [`Window`] of the application. It is a subclass of [`adw::ApplicationWindow`].
     /// 
-    /// # Actions
+    /// ## Actions
     /// 
     /// The [`Window`] implements the following actions:
     /// * `num-insert` - Inserts a number into the display.
