@@ -1,7 +1,6 @@
 mod imp;
 
 use glib::Object;
-use glib::prelude::*;
 use gtk::glib;
 
 glib::wrapper! {
