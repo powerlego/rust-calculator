@@ -14,32 +14,31 @@ impl CalculationBuffer {
 
     /// Creates a new builder-pattern struct instance to construct [`CalculationBuffer`] objects.
     ///
-    /// This method returns an instance of [`CalculationBufferBuilder`] which can be used to create [`CalculationBuffer`] objects.
+    /// This method returns an instance of [`CalculationBufferBuilder`] which can be used to create
+    /// [`CalculationBuffer`] objects.
     pub fn builder() -> CalculationBufferBuilder {
         CalculationBufferBuilder::new()
     }
 }
 
-
 /// A [builder-pattern] type to construct [`CalculationBuffer`] objects.
-///
-#[must_use ="The builder must be built to be used."]
+#[must_use = "The builder must be built to be used."]
 pub struct CalculationBufferBuilder {
-    builder: glib::object::ObjectBuilder<'static,CalculationBuffer>
+    builder: glib::object::ObjectBuilder<'static, CalculationBuffer>,
 }
 
 impl CalculationBufferBuilder {
     /// Create a new [`CalculationBufferBuilder`]
     pub fn new() -> Self {
         Self {
-            builder: glib::object::Object::builder()
+            builder: glib::object::Object::builder(),
         }
     }
 
     /// Set the text of the [`CalculationBuffer`]
     pub fn text(self, text: &str) -> Self {
         Self {
-            builder: self.builder.property("text", text)
+            builder: self.builder.property("text", text),
         }
     }
 

@@ -34,9 +34,13 @@ fn load_css() {
 }
 
 /// Builds the UI
+/// 
 /// # Arguments
+/// 
 /// * `app` - The application
+/// 
 /// # Returns
+/// 
 /// None
 fn build_ui(app: &adw::Application) {
     // Create new window and present it
