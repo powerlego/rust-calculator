@@ -2,6 +2,7 @@ mod integer_object;
 mod utils;
 mod widgets;
 mod calculation_buffer;
+mod enums;
 use gdk::Display;
 use gtk::prelude::*;
 use gtk::{gdk, gio, glib, CssProvider};
