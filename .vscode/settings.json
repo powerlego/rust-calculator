@@ -2,5 +2,6 @@
     "lldb.displayFormat": "auto",
     "lldb.showDisassembly": "auto",
     "lldb.dereferencePointers": true,
-    "lldb.consoleMode": "evaluate"
+    "lldb.consoleMode": "evaluate",
+    "editor.fontFamily": "'RobotoMono Nerd Font', 'Calculator Fluent Icons'"
 }
