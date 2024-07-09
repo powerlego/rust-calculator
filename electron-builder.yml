@@ -1,0 +1,20 @@
+appId: com.nc.calculator
+productName: Calculator
+directories:
+  buildResources: build
+files:
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!electron.vite.config.{js,ts,mjs,cjs}"
+  - "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md,tailwind.config.js,svelte.config.js,prettier.config.js,postcss.config.js,eslint.config.mjs,Cargo.toml,Cargo.lock,.gitignore,.editorconfig}"
+  - "!{.env,.env.*,.npmrc,pnpm-lock.yaml,yarn.lock}"
+  - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json,tsconfig.eslint.json}"
+  - "!target/*"
+  - "!api/*"
+win:
+  executableName: calculator
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+npmRebuild: false

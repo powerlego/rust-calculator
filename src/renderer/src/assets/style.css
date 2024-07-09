@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.cet-titlebar {
+  @apply !bg-base-300;
+}
+
+.cet-menubar-menu-container {
+  @apply !bg-base-200;
+}
+
+.cet-action-label.separator {
+  @apply !border-base-content;
+}
+
+.cet-menubar-menu-button:hover {
+  @apply !bg-base-content !bg-opacity-20;
+}
+.cet-menubar-menu-button:focus {
+  @apply !bg-base-content !bg-opacity-20;
+}
+
+.keybinding {
+  @apply !text-base-content;
+}
+
+.cet-menu-item-icon {
+  @apply !fill-base-content;
+}
+
+.cet-action-label {
+  @apply !text-base-content;
+}
+
+.focused > .cet-action-menu-item {
+  @apply !bg-base-content !bg-opacity-20;
+}
+
+.cet-menubar-menu-title {
+  @apply !text-base-content;
+}
+
+.cet-titlebar .cet-title-center {
+  @apply !text-base-content;
+}
+.cet-titlebar .cet-title-left {
+  @apply !text-base-content;
+}
+
+.cet-submenu-indicator > svg {
+  @apply !fill-base-content;
+}
+
+.cet-submenu-item:hover .cet-submenu-indicator > svg {
+  @apply !fill-base-content;
+}
+
+.cet-control-icon svg {
+  @apply !fill-base-content;
+}
+
+.cet-control-icon:not(.inactive):hover {
+  @apply !bg-base-content !bg-opacity-20;
+}
+
+mnemonic {
+  @apply underline;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-base-content bg-opacity-60 rounded-full;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
