@@ -1,12 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
-import type { Assembly, EditAssembly } from "../types";
 import { attachTitlebarToWindow, setupTitlebar } from "custom-electron-titlebar/main";
 import { electronApp, is, optimizer, platform } from "@electron-toolkit/utils";
-import backend from "../../resources/api.exe?asset&asarUnpack";
-import fetch from "node-fetch";
 import icon from "../../resources/icon.png?asset";
 import { join } from "path";
-import { spawn } from "child_process";
 
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -59,23 +55,23 @@ app.commandLine.appendSwitch("disable-features", "WidgetLayering");
 app
   .whenReady()
   .then(() => {
-    const backendProc = spawn(backend);
-    backendProc.stdout.on("data", (data) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      console.log("data: ", data.toString("utf8"));
-    });
-    backendProc.stderr.on("data", (data) => {
-      dialog
-        .showMessageBox({
-          type: "error",
-          title: "Error",
-          message: "Importing data failed.",
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-          detail: data.toString("utf8"),
-        })
-        .catch(console.error);
-      console.log(`stderr: ${data}`); // when error
-    });
+    // const backendProc = spawn(backend);
+    // backendProc.stdout.on("data", (data) => {
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    //   console.log("data: ", data.toString("utf8"));
+    // });
+    // backendProc.stderr.on("data", (data) => {
+    //   dialog
+    //     .showMessageBox({
+    //       type: "error",
+    //       title: "Error",
+    //       message: "Importing data failed.",
+    //       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    //       detail: data.toString("utf8"),
+    //     })
+    //     .catch(console.error);
+    //   console.log(`stderr: ${data}`); // when error
+    // });
 
     // Set app user model id for windows
     electronApp.setAppUserModelId("com.nc");
@@ -146,12 +142,12 @@ app
     // explicitly with Cmd + Q.
     app.on("window-all-closed", () => {
       if (process.platform !== "darwin") {
-        backendProc.kill();
+        // backendProc.kill();
         app.quit();
       }
     });
     app.on("before-quit", () => {
-      backendProc.kill();
+      // backendProc.kill();
     });
   })
   .catch(console.error);
