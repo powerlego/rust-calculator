@@ -28,7 +28,11 @@ module.exports = {
       },
       fontFamily: {
         calculator: ["Calculator"],
+        segoe: ["Segoe UI", "sans-serif"],
       },
+    },
+    fontFamily: {
+      sans: ["Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "ui-sans-serif", "system-ui", "sans-serif"],
     },
   },
   plugins: [
