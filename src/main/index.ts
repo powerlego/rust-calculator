@@ -1,46 +1,16 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
+import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, shell } from "electron";
 import { attachTitlebarToWindow, setupTitlebar } from "custom-electron-titlebar/main";
 import { electronApp, is, optimizer, platform } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { join } from "path";
 
-if (require("electron-squirrel-startup")) {
-  app.quit();
-}
-
 const menuTemplate: (Electron.MenuItem | Electron.MenuItemConstructorOptions)[] = [
   {
-    label: "&File",
-    submenu: [platform.isMacOS ? { role: "close" } : { role: "quit", label: "&Exit" }],
-  },
-  {
-    label: "&View",
-    submenu: [
-      { role: "resetZoom", label: "&Reset Zoom" },
-      { role: "zoomIn", label: "Zoom &In" },
-      { role: "zoomOut", label: "Zoom &Out" },
-      { type: "separator" },
-      { role: "togglefullscreen", label: "&Full Screen" },
-    ],
-  },
-  {
-    role: "help",
-    label: "&Help",
+    label: "​",
     submenu: [
       {
-        label: "&About",
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        click: async () => {
-          await dialog.showMessageBox({
-            type: "info",
-            title: "About",
-            message: "Parts List Generator",
-            detail: "This program converts the variation calculation from BEAM into a parts list.",
-          });
-        },
+        role: "toggleDevTools",
       },
-      { type: "separator", visible: is.dev },
-      { role: "toggleDevTools", visible: is.dev },
     ],
   },
 ];
@@ -84,8 +54,8 @@ app
 
     function createWindow() {
       // Create the browser window.
-      const minHeight = 720;
-      const minWidth = 1080;
+      const minHeight = 500;
+      const minWidth = 320;
 
       const mainWindow = new BrowserWindow({
         width: minWidth,
@@ -103,10 +73,10 @@ app
       });
 
       const menu = Menu.buildFromTemplate(menuTemplate);
-      Menu.setApplicationMenu(menu);
+      Menu.setApplicationMenu(null);
 
       attachTitlebarToWindow(mainWindow);
-      mainWindow.setMinimumSize(720, minHeight);
+      mainWindow.setMinimumSize(minWidth, minHeight);
 
       mainWindow.on("ready-to-show", () => {
         mainWindow.show();
@@ -125,6 +95,12 @@ app
       else {
         mainWindow.loadFile(join(__dirname, "../renderer/index.html")).catch(console.error);
       }
+    }
+
+    if (is.dev) {
+      globalShortcut.register("CommandOrControl+Shift+I", () => {
+        BrowserWindow.getFocusedWindow()?.webContents.toggleDevTools();
+      });
     }
 
     createWindow();

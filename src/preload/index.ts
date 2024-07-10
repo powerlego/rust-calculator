@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
   new Titlebar({
     backgroundColor: TitlebarColor.BLACK,
     containerOverflow: "hidden",
-    titleHorizontalAlignment: "center",
+    titleHorizontalAlignment: "left",
   });
 });
 

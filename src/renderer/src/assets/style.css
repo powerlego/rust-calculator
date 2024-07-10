@@ -21,6 +21,10 @@
   @apply !bg-base-content !bg-opacity-20;
 }
 
+.cet-menubar {
+  display: none !important;
+}
+
 .keybinding {
   @apply !text-base-content;
 }
@@ -42,8 +46,15 @@
 }
 
 .cet-titlebar .cet-title-center {
-  @apply !text-base-content;
+  @apply !text-base-content mx-auto !max-w-max;
+  position: unset !important;
+  transform: unset !important;
 }
+
+.cet-titlebar .cet-window-controls {
+  margin-left: unset;
+}
+
 .cet-titlebar .cet-title-left {
   @apply !text-base-content;
 }
@@ -74,8 +85,18 @@ mnemonic {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-base-content bg-opacity-60 rounded-full;
+  @apply rounded-full bg-base-content bg-opacity-60;
 }
 ::-webkit-scrollbar-corner {
   background-color: transparent;
+}
+
+@layer base {
+  @font-face {
+    font-family: "Calculator";
+    font-style: normal;
+    font-weight: 400;
+    display: swap;
+    src: url("fonts/CalculatorIcons.ttf") format("truetype");
+  }
 }

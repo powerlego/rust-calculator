@@ -26,6 +26,9 @@ module.exports = {
         // "mto-app-detail":
         //   "minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto) minmax(2rem,auto)",
       },
+      fontFamily: {
+        calculator: ["Calculator"],
+      },
     },
   },
   plugins: [
