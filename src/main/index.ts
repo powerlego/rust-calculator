@@ -4,17 +4,6 @@ import { electronApp, is, optimizer, platform } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { join } from "path";
 
-const menuTemplate: (Electron.MenuItem | Electron.MenuItemConstructorOptions)[] = [
-  {
-    label: "​",
-    submenu: [
-      {
-        role: "toggleDevTools",
-      },
-    ],
-  },
-];
-
 setupTitlebar();
 
 app.commandLine.appendSwitch("disable-features", "WidgetLayering");
@@ -71,8 +60,6 @@ app
           sandbox: false,
         },
       });
-
-      const menu = Menu.buildFromTemplate(menuTemplate);
       Menu.setApplicationMenu(null);
 
       attachTitlebarToWindow(mainWindow);
