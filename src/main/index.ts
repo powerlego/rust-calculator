@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, shell } from "electron";
 import { attachTitlebarToWindow, setupTitlebar } from "custom-electron-titlebar/main";
-import { electronApp, is, optimizer, platform } from "@electron-toolkit/utils";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 import { join } from "path";
 
@@ -67,6 +67,9 @@ app
 
       mainWindow.on("ready-to-show", () => {
         mainWindow.show();
+      });
+      mainWindow.on("resize", () => {
+        mainWindow.webContents.send("windowResize");
       });
 
       mainWindow.webContents.setWindowOpenHandler((details) => {
