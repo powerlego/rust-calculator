@@ -17,10 +17,12 @@
   onMount(() => {
     displayTextElement = document.getElementById("displayText") as HTMLSpanElement;
     displayContainer = document.getElementById("displayContainer") as HTMLDivElement;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     window.api.on("windowResize", () => {
       updateFontSize();
     });
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       window.api.off("windowResize", () => {
         updateFontSize();
       });
