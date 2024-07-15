@@ -91,6 +91,26 @@ mnemonic {
   background-color: transparent;
 }
 
+@layer components {
+  .calc-button {
+    @apply h-[calc(100%-2px)] p-0 m-px font-normal border-none min-w-6 min-h-3 btn btn-ghost text-base-content bg-base-100 dark:bg-[color-mix(in_srgb,var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity))),white_3%)];
+    font-size: 34px;
+  }
+
+  .operator-button {
+    @apply bg-[color-mix(in_srgb,var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity))),black_2%)] dark:bg-base-100;
+    font-size: 14px;
+  }
+
+  .operator-button-symbol {
+    @apply font-calculator;
+  }
+
+  .operator-button-keypad {
+    font-size: 14px;
+  }
+}
+
 @layer base {
   @font-face {
     font-family: "Calculator";
