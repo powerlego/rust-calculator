@@ -23,7 +23,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "custom-electron-titlebar": "4.2.8"
+    "custom-electron-titlebar": "^4.2.8"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
