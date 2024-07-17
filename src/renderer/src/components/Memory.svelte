@@ -27,3 +27,9 @@
     ></button
   >
 </div>
+
+<style>
+  .memory {
+    flex: 0.25 3 32px;
+  }
+</style>
